@@ -9,12 +9,13 @@ import { initials, todayISO, weekdayIndex } from '@/lib/format';
 /* ---------- Hero: poliklinika ko'rsatkich taxtasi (haqiqiy shifokorlar, xona raqamlari) ---------- */
 function Hero({ specialties }) {
   const [doctors, setDoctors] = useState(null);
+  const [failed, setFailed] = useState(null);
   const weekday = weekdayIndex(todayISO());
 
   useEffect(() => {
     api.doctors({ active: 'true' })
       .then(({ data }) => setDoctors([...data].sort((x, y) => x.room.localeCompare(y.room, undefined, { numeric: true }))))
-      .catch(() => setDoctors([]));
+      .catch((err) => setFailed(err));
   }, []);
 
   const working = doctors ? doctors.filter((d) => d.workDays.includes(weekday)).length : null;
@@ -40,7 +41,7 @@ function Hero({ specialties }) {
         <div className="directory-head">
           <span>Xona</span><span>Yo&apos;nalish va shifokor</span><span>Bugun</span>
         </div>
-        {!doctors && Array.from({ length: 6 }, (_, i) => <span key={i} className="dir-row skeleton-row" />)}
+        {!doctors && !failed && Array.from({ length: 6 }, (_, i) => <span key={i} className="dir-row skeleton-row" />)}
         {doctors && doctors.map((d, i) => {
           const works = d.workDays.includes(weekday);
           return (
@@ -52,6 +53,13 @@ function Hero({ specialties }) {
             </Link>
           );
         })}
+        {failed && (
+          <div className="dir-error" role="alert">
+            <b>Server bilan aloqa yo&apos;q</b>
+            <span>{failed.message}</span>
+            <button type="button" className="btn btn-ticket btn-sm" onClick={() => window.location.reload()}>Qayta urinish</button>
+          </div>
+        )}
         {doctors && doctors.length === 0 && <p className="dir-empty">Hozircha faol shifokorlar yo&apos;q</p>}
       </nav>
     </section>
