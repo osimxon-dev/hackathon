@@ -238,7 +238,7 @@ dialog::backdrop { background: rgba(16, 52, 58, .5); }
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; gap: 2rem; }
-  .doctor-layout { grid-template-columns: 1fr; }
+  .doctor-layout { grid-template-columns: minmax(0, 1fr); }
   .profile { position: static; }
   .filters { grid-template-columns: 1fr 1fr; }
   .filters .grow { grid-column: 1 / -1; }
