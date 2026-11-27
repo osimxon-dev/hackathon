@@ -153,12 +153,25 @@ curl -X POST https://<domen>/api/appointments \
 
 ## Frontend sahifalari
 
+**Bemor sayti**
+
 | Sahifa | Vazifasi |
 |--------|----------|
-| `/` | Eng yaqin bo'sh navbat, bugungi ko'rsatkichlar, shifokorlar katalogi (qidiruv va mutaxassislik filtri) |
+| `/` | Bosh sahifa: tizim nima, kim uchun, qanday ishlatiladi, chiptani o'qish, savollar |
+| `/shifokorlar` | Poliklinika ko'rsatkichi (xona, yo'nalish, bugungi ish vaqti), qidiruv va mutaxassislik filtri |
 | `/doctors/[id]` | Shifokor profili, 14 kunlik sana tanlash, vaqt to'ri, yozilish formasi, navbat chiptasi |
-| `/appointments` | Registratura: qabullar jadvali, filtrlar, sahifalash, ko'chirish, holat belgilash |
-| `/admin` | Shifokorlarni qo'shish, tahrirlash, faolsizlantirish, o'chirish |
+| `/yonalishlar` | Yo'nalishlar va har biri uchun eng yaqin bo'sh vaqt |
+| `/chipta` | Mening chiptam: telefon raqami orqali qabullarni topish, bekor qilish, chop etish |
+| `/qanday-ishlaydi` | Qadamlar va 12 ta navbat qoidasi |
+
+**Registratura paneli** (`ADMIN_PASSWORD` bilan himoyalangan, `/kirish` orqali kiriladi)
+
+| Sahifa | Vazifasi |
+|--------|----------|
+| `/admin` | Umumiy ko'rinish: 7 kunlik yuklama, yo'nalishlar reytingi, bugungi holat, MongoDB faollik jurnali |
+| `/admin/qabullar` | Qabullar jadvali, filtrlar, sahifalash, ko'chirish, holat belgilash |
+| `/admin/shifokorlar` | Shifokorlarni qo'shish, tahrirlash, faolsizlantirish, o'chirish |
+| `/admin/tablo` | Yo'lak uchun navbat tablosi (faqat chipta raqamlari) |
 
 Har bir sahifada yuklanish, xato (qayta urinish tugmasi bilan) va bo'sh holatlar bor. Interfeys telefonda ham to'liq ishlaydi: jadvallar kartochkaga aylanadi, sanalar gorizontal suriladi.
 
