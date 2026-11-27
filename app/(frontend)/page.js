@@ -2,73 +2,113 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import Ticket from '@/components/Ticket';
 import { EmptyState, ErrorState, Loading, SearchIcon, WeekStrip } from '@/components/ui';
 import { api } from '@/lib/api';
-import { initials, relativeDay } from '@/lib/format';
+import { initials, nowTime, pad, relativeDay } from '@/lib/format';
 
-/* ---------- Eng yaqin bo'sh navbat (innovatsion funksiya) ---------- */
-function NearestFinder({ specialties }) {
+/* ---------- Tezkor yozilish: mutaxassislik -> bo'sh vaqt -> yozilish ---------- */
+function QuickBook({ specialties }) {
   const [specialty, setSpecialty] = useState('');
-  const [state, setState] = useState({ loading: true, data: null, error: null });
+  const [state, setState] = useState({ loading: true, slot: null, times: [], error: null });
 
   const load = useCallback(async () => {
-    setState({ loading: true, data: null, error: null });
+    setState((s) => ({ ...s, loading: true, error: null }));
     try {
       const { data } = await api.nearest({ specialty });
-      setState({ loading: false, data, error: null });
+      if (!data) {
+        setState({ loading: false, slot: null, times: [], error: null });
+        return;
+      }
+      const { data: day } = await api.doctorSlots(data.doctor.id, data.date);
+      const times = day.slots.filter((t) => t.status === 'free').slice(0, 6);
+      setState({ loading: false, slot: data, times, error: null });
     } catch (error) {
-      setState({ loading: false, data: null, error });
+      setState({ loading: false, slot: null, times: [], error });
     }
   }, [specialty]);
 
   useEffect(() => { load(); }, [load]);
+  const { loading, slot, times, error } = state;
 
-  const { loading, data, error } = state;
   return (
-    <div className="finder">
-      <div className="finder-controls">
-        <div className="field">
-          <label htmlFor="finder-specialty">Qaysi mutaxassis kerak?</label>
-          <select id="finder-specialty" className="input" value={specialty} onChange={(e) => setSpecialty(e.target.value)}>
-            <option value="">Istalgan mutaxassis</option>
-            {specialties.map((s) => <option key={s.name} value={s.name}>{s.name}</option>)}
-          </select>
-        </div>
+    <div className="qb">
+      <p className="qb-step"><span className="qb-n">1</span>Kim kerak?</p>
+      <div className="qb-chips" role="group" aria-label="Mutaxassislik">
+        {[{ name: '' }, ...specialties].map((s) => (
+          <button key={s.name || 'all'} type="button" className="qb-chip" aria-pressed={specialty === s.name} onClick={() => setSpecialty(s.name)}>
+            {s.name || 'Istalgan'}
+          </button>
+        ))}
       </div>
-      <div aria-live="polite">
+
+      <p className="qb-step"><span className="qb-n">2</span>Vaqtni bosing</p>
+      <div className="qb-result" aria-live="polite" aria-busy={loading || undefined}>
         {loading && (
-          <Ticket loading>
-            <div className="skeleton" style={{ height: '1.4em', width: '70%' }} />
-            <div className="skeleton" style={{ height: '1em', width: '50%' }} />
-            <div className="skeleton" style={{ height: '2.6em', width: '60%' }} />
-          </Ticket>
+          <div className="qb-times">
+            {Array.from({ length: 6 }, (_, i) => <span key={i} className="qb-time skeleton" />)}
+          </div>
         )}
         {error && <ErrorState error={error} onRetry={load} />}
-        {!loading && !error && !data && (
-          <Ticket number={0}>
-            <p className="ticket-title">Yaqin 14 kunda bo&apos;sh vaqt topilmadi</p>
-            <p className="muted" style={{ margin: 0 }}>Boshqa mutaxassisni tanlang yoki keyinroq qayta tekshiring.</p>
-          </Ticket>
+        {!loading && !error && !slot && (
+          <p className="qb-empty">Yaqin 14 kunda bo&apos;sh vaqt topilmadi. Boshqa mutaxassisni tanlang</p>
         )}
-        {!loading && data && (
-          <Ticket number={data.ticketNumber} room={data.doctor.room} className="reveal">
-            <p className="muted small" style={{ margin: 0 }}>Eng yaqin bo&apos;sh navbat</p>
-            <p className="ticket-title" style={{ margin: 0 }}>{data.doctor.fullName}</p>
-            <dl className="ticket-row" style={{ margin: 0 }}>
-              <div><dt>Mutaxassislik</dt><dd>{data.doctor.specialty}</dd></div>
-              <div><dt>Kun</dt><dd>{relativeDay(data.date)}</dd></div>
-              <div><dt>Vaqt</dt><dd>{data.time}</dd></div>
-            </dl>
-            <div>
-              <Link className="btn btn-primary" href={`/doctors/${data.doctor.id}?date=${data.date}&time=${data.time}`}>
-                Shu vaqtga yozilish
-              </Link>
+        {!loading && slot && (
+          <>
+            <Link className="qb-doctor" href={`/doctors/${slot.doctor.id}?date=${slot.date}`}>
+              <span className="avatar" aria-hidden="true">{initials(slot.doctor.fullName)}</span>
+              <span className="qb-doctor-text">
+                <b>{slot.doctor.fullName}</b>
+                <span>{slot.doctor.specialty} · {slot.doctor.room}-xona · {relativeDay(slot.date)}</span>
+              </span>
+              <span className="qb-arrow" aria-hidden="true">→</span>
+            </Link>
+            <div className="qb-times">
+              {times.map((t, i) => (
+                <Link key={t.time} className={`qb-time ${i === 0 ? 'is-first' : ''}`} style={{ '--i': i }}
+                  href={`/doctors/${slot.doctor.id}?date=${slot.date}&time=${t.time}`}>
+                  <b>{t.time}</b>
+                  <span>{i === 0 ? 'eng yaqin' : `№ ${pad(t.ticketNumber)}`}</span>
+                </Link>
+              ))}
             </div>
-          </Ticket>
+          </>
         )}
       </div>
     </div>
+  );
+}
+
+/* ---------- Hero: kursor ortidan yuradigan yorug'lik ---------- */
+function Hero({ specialties }) {
+  const [clock, setClock] = useState('');
+  useEffect(() => {
+    const tick = () => setClock(nowTime());
+    tick();
+    const timer = setInterval(tick, 10000);
+    return () => clearInterval(timer);
+  }, []);
+  const doctors = specialties.reduce((sum, s) => sum + s.doctors, 0);
+  const track = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+  };
+
+  return (
+    <section className="hero-x" onMouseMove={track}>
+      <div className="hero-x-inner">
+        <div className="hero-copy">
+          <p className="hero-live"><i aria-hidden="true" />Toshkent vaqti {clock}{doctors > 0 && ` · ${doctors} shifokor jadvalda`}</p>
+          <h1>Shifokorga navbatni <span className="hl">uydan</span> oling</h1>
+          <p className="hero-lead">Poliklinika yo&apos;lagida soatlab kutish shart emas. Mutaxassisni tanlang, bo&apos;sh vaqtni bosing, chiptangiz telefoningizda bo&apos;ladi</p>
+          <div className="hero-actions">
+            <a className="btn btn-ticket" href="#doctors-title">Barcha shifokorlar</a>
+            <Link className="btn hero-ghost" href="/chipta">Mening chiptam</Link>
+          </div>
+        </div>
+        <QuickBook specialties={specialties} />
+      </div>
+    </section>
   );
 }
 
@@ -154,13 +194,7 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="hero">
-        <div>
-          <h1>Shifokorga navbatni uydan oling</h1>
-          <p className="lead">Poliklinika yo&apos;lagida soatlab kutish shart emas. Bo&apos;sh vaqtni tanlang, chiptangiz telefoningizda bo&apos;ladi.</p>
-        </div>
-        <NearestFinder specialties={specialties} />
-      </section>
+      <Hero specialties={specialties} />
 
       <Figures />
 
