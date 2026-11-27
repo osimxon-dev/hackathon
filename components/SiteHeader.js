@@ -5,7 +5,11 @@ import { usePathname } from 'next/navigation';
 
 const LINKS = [
   { href: '/', label: 'Shifokorlar', match: (p) => p === '/' || p.startsWith('/doctors') },
+  { href: '/yonalishlar', label: "Yo'nalishlar", match: (p) => p.startsWith('/yonalishlar') },
+  { href: '/chipta', label: 'Mening chiptam', match: (p) => p.startsWith('/chipta') },
+  { href: '/tablo', label: 'Tablo', match: (p) => p.startsWith('/tablo') },
   { href: '/appointments', label: 'Qabullar', match: (p) => p.startsWith('/appointments') },
+  { href: '/statistika', label: 'Statistika', match: (p) => p.startsWith('/statistika') },
   { href: '/admin', label: 'Boshqaruv', match: (p) => p.startsWith('/admin') },
 ];
 
