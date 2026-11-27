@@ -1,3 +1,4 @@
+import { logEvent } from '../activity.js';
 import { one, query } from '../db.js';
 import { conflict } from '../http.js';
 import { toDoctor } from '../mappers.js';
@@ -62,7 +63,9 @@ async function create({ body }) {
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
     [d.fullName, d.specialty, d.room, d.experienceYears, d.bio, d.workDays, d.workStart, d.workEnd, d.slotMinutes, d.isActive],
   );
-  return { status: 201, body: { data: toDoctor(row) } };
+  const doctor = toDoctor(row);
+  await logEvent('doctor.created', { doctorId: doctor.id, doctorName: doctor.fullName, specialty: doctor.specialty });
+  return { status: 201, body: { data: doctor } };
 }
 
 /** PUT /api/doctors/:id va PATCH /api/doctors/:id — qisman yangilash ham qo'llab-quvvatlanadi */
@@ -90,7 +93,9 @@ async function update({ params, body }) {
     `UPDATE doctors SET ${sets.join(', ')}, updated_at = NOW() WHERE id = $${values.length} RETURNING *`,
     values,
   );
-  return { status: 200, body: { data: toDoctor(row) } };
+  const doctor = toDoctor(row);
+  await logEvent('doctor.updated', { doctorId: doctor.id, doctorName: doctor.fullName, specialty: doctor.specialty, fields: Object.keys(body || {}) });
+  return { status: 200, body: { data: doctor } };
 }
 
 /** DELETE /api/doctors/:id — qabullar tarixi bor shifokor o'chirilmaydi, faolsizlantiriladi */
@@ -110,6 +115,7 @@ async function remove({ params }) {
     throw conflict('Shifokorning qabullar tarixi saqlanadi, shuning uchun uni o\'chirib bo\'lmaydi. Uning o\'rniga faolsizlantiring');
   }
   await one('DELETE FROM doctors WHERE id = $1 RETURNING id', [id]);
+  await logEvent('doctor.deleted', { doctorId: id });
   return { status: 204 };
 }
 

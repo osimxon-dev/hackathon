@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   // pg — Node.js drayveri, uni bundlega qo'shmasdan tashqi paket sifatida ishlatamiz
-  serverExternalPackages: ['pg'],
+  serverExternalPackages: ['pg', 'mongodb'],
   poweredByHeader: false,
   // Eski manzillar registratura paneliga ko'chdi
   async redirects() {

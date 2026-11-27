@@ -1,4 +1,6 @@
+import { activityEnabled, recentEvents } from '../activity.js';
 import { one, query } from '../db.js';
+import { HttpError } from '../http.js';
 import { clinicNow } from '../time.js';
 
 /** GET /api/stats — bosh sahifa va registratura uchun bugungi ko'rsatkichlar */
@@ -53,6 +55,18 @@ async function health() {
   return { status: 200, body: { status: 'ok', time: new Date().toISOString() } };
 }
 
+/** GET /api/activity?limit=&type= — MongoDB'dagi faollik jurnali (registratura uchun) */
+async function activity({ query: q }) {
+  if (!activityEnabled()) return { status: 200, body: { data: [], meta: { enabled: false } } };
+  const limit = Math.min(Math.max(Number.parseInt(q.limit, 10) || 30, 1), 100);
+  try {
+    const data = await recentEvents({ limit, type: q.type });
+    return { status: 200, body: { data, meta: { enabled: true, storage: 'mongodb' } } };
+  } catch {
+    throw new HttpError(503, "Faollik jurnali (MongoDB) vaqtincha mavjud emas");
+  }
+}
+
 export function registerStatsRoutes(router) {
-  router.get('/api/stats', stats).get('/api/health', health);
+  router.get('/api/stats', stats).get('/api/health', health).get('/api/activity', activity);
 }

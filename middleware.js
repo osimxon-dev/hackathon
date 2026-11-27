@@ -17,12 +17,13 @@ export async function middleware(request) {
 
   const writesDoctors = pathname.startsWith('/api/doctors') && method !== 'GET';
   const deletesAppointment = pathname.startsWith('/api/appointments/') && method === 'DELETE';
-  if (writesDoctors || deletesAppointment) {
+  const readsActivity = pathname.startsWith('/api/activity');
+  if (writesDoctors || deletesAppointment || readsActivity) {
     return NextResponse.json({ error: 'Bu amal uchun registratura paneliga kiring' }, { status: 401 });
   }
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/api/doctors/:path*', '/api/doctors', '/api/appointments/:path*'],
+  matcher: ['/admin/:path*', '/api/doctors/:path*', '/api/doctors', '/api/appointments/:path*', '/api/activity'],
 };

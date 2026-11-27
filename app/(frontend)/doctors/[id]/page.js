@@ -260,7 +260,7 @@ export default function DoctorPage() {
   if (!Number.isInteger(doctorId) || doctorId <= 0) {
     return (
       <EmptyState title="Shifokor tanlanmagan" text="Bosh sahifadan shifokorni tanlang.">
-        <Link className="btn btn-primary btn-sm" href="/">Shifokorlar ro&apos;yxati</Link>
+        <Link className="btn btn-primary btn-sm" href="/shifokorlar">Shifokorlar ro&apos;yxati</Link>
       </EmptyState>
     );
   }
@@ -269,7 +269,7 @@ export default function DoctorPage() {
   if (doctor.error) {
     return doctor.error.status === 404 ? (
       <EmptyState title="Shifokor topilmadi" text="U ro'yxatdan olib tashlangan bo'lishi mumkin.">
-        <Link className="btn btn-primary btn-sm" href="/">Shifokorlar ro&apos;yxati</Link>
+        <Link className="btn btn-primary btn-sm" href="/shifokorlar">Shifokorlar ro&apos;yxati</Link>
       </EmptyState>
     ) : <ErrorState error={doctor.error} onRetry={loadDoctor} />;
   }
@@ -279,7 +279,7 @@ export default function DoctorPage() {
 
   return (
     <>
-      <p className="small" style={{ margin: '0 0 1rem' }}><Link href="/">Barcha shifokorlar</Link></p>
+      <p className="small" style={{ margin: '0 0 1rem' }}><Link href="/shifokorlar">Barcha shifokorlar</Link></p>
       <div className="doctor-layout">
         <Profile doctor={d} />
         <section>

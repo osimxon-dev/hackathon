@@ -1,203 +1,153 @@
-'use client';
-
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { EmptyState, ErrorState, Loading, SearchIcon, WeekStrip } from '@/components/ui';
-import { api } from '@/lib/api';
-import { initials, todayISO, weekdayIndex } from '@/lib/format';
 
-/* ---------- Hero: poliklinika ko'rsatkich taxtasi (haqiqiy shifokorlar, xona raqamlari) ---------- */
-function Hero({ specialties }) {
-  const [doctors, setDoctors] = useState(null);
-  const weekday = weekdayIndex(todayISO());
+// Bosh sahifa: Navbat nima, kim uchun va qanday ishlatiladi. Yozilish bu yerda emas, /shifokorlar sahifasida.
 
-  useEffect(() => {
-    api.doctors({ active: 'true' })
-      .then(({ data }) => setDoctors([...data].sort((x, y) => x.room.localeCompare(y.room, undefined, { numeric: true }))))
-      .catch(() => setDoctors([]));
-  }, []);
+const STEPS = [
+  {
+    title: 'Shifokorni toping',
+    text: "Shifokorlar sahifasida poliklinika ko'rsatkichi bor: har bir shifokorning xonasi, yo'nalishi va bugungi ish vaqti. Ism yoki mutaxassislik bo'yicha qidirish mumkin",
+  },
+  {
+    title: "Bo'sh vaqtni tanlang",
+    text: "Shifokorni bosganingizda uning kunlik jadvali ochiladi. Band va o'tib ketgan vaqtlar yopiq, faqat bo'shlari bosiladi",
+  },
+  {
+    title: 'Ism va telefonni yozing',
+    text: "Ro'yxatdan o'tish, parol yoki SMS kerak emas. Telefon raqami chiptangizni keyin topish uchun kerak",
+  },
+  {
+    title: 'Chipta bilan keling',
+    text: "Chipta raqami, xona va vaqt ekranda chiqadi. Belgilangan vaqtda xona oldiga keling, tablodagi raqamingizni kuting",
+  },
+];
 
-  const working = doctors ? doctors.filter((d) => d.workDays.includes(weekday)).length : null;
+const FEATURES = [
+  ["Eng yaqin bo'sh vaqt", "Yo'nalishlar sahifasi har bir mutaxassislik uchun eng yaqin bo'sh navbatni o'zi hisoblab beradi"],
+  ['Chipta telefoningizda', "Mening chiptam sahifasida telefon raqamingiz bo'yicha barcha qabullaringizni ko'rasiz"],
+  ["Rejangiz o'zgarsa", "Qabulni bekor qilsangiz, vaqt darhol boshqa bemorlarga ochiladi"],
+  ["Ikki marta band bo'lmaydi", "Bir vaqtga faqat bitta bemor. Ikki kishi bir paytda bossa ham, server faqat bittasini yozadi"],
+  ["Yo'lakda tablo", "Poliklinika ekranida har bir xonaga hozir kim kirishi chipta raqami bilan ko'rinadi. Ismingiz ko'rsatilmaydi"],
+  ['Toshkent vaqti', "Barcha vaqtlar Toshkent bo'yicha. O'tib ketgan vaqtga yozilib bo'lmaydi"],
+];
 
-  return (
-    <section className="hero2">
-      <div className="hero2-copy">
-        <p className="hero2-kicker">Poliklinika · onlayn navbat</p>
-        <h1>Navbatni uydan oling, qabulga vaqtida keling</h1>
-        <p className="hero2-lead">Yo&apos;lakda soatlab kutish shart emas. Shifokorni tanlang, jadvalidan bo&apos;sh vaqtni band qiling, chipta telefoningizda qoladi</p>
-        <div className="hero2-actions">
-          <a className="btn btn-ticket" href="#doctors-title">Shifokor tanlash <span aria-hidden="true">→</span></a>
-          <Link className="btn btn-ghost" href="/chipta">Mening chiptam</Link>
-        </div>
-        <dl className="hero2-facts">
-          <div><dt>Shifokorlar</dt><dd>{doctors ? doctors.length : '—'}</dd></div>
-          <div><dt>Yo&apos;nalishlar</dt><dd>{specialties.length || '—'}</dd></div>
-          <div><dt>Bugun ishlaydi</dt><dd>{working ?? '—'}</dd></div>
-        </dl>
-      </div>
-
-      <nav className="directory" aria-label="Poliklinika ko'rsatkichi">
-        <div className="directory-head">
-          <span>Xona</span><span>Yo&apos;nalish va shifokor</span><span>Bugun</span>
-        </div>
-        {!doctors && Array.from({ length: 6 }, (_, i) => <span key={i} className="dir-row skeleton-row" />)}
-        {doctors && doctors.map((d, i) => {
-          const works = d.workDays.includes(weekday);
-          return (
-            <Link key={d.id} className="dir-row" href={`/doctors/${d.id}`} style={{ '--i': i }}>
-              <span className="dir-room">{d.room}</span>
-              <span className="dir-name"><b>{d.specialty}</b><small>{d.fullName}</small></span>
-              <span className={`dir-time ${works ? '' : 'is-off'}`}>{works ? `${d.workStart}–${d.workEnd}` : 'Dam olish'}</span>
-              <span className="dir-arrow" aria-hidden="true">→</span>
-            </Link>
-          );
-        })}
-        {doctors && doctors.length === 0 && <p className="dir-empty">Hozircha faol shifokorlar yo&apos;q</p>}
-      </nav>
-    </section>
-  );
-}
-
-/* ---------- Bugungi ko'rsatkichlar ---------- */
-function Figures() {
-  const [stats, setStats] = useState(null);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    api.stats().then(({ data }) => setStats(data)).catch(() => setFailed(true));
-  }, []);
-
-  const items = [
-    ['Bugungi qabullar', stats?.today.total],
-    ['Kutilayotgan qabullar', stats?.upcoming],
-    ['Bugun qabul qilindi', stats?.today.completed],
-    ['Faol shifokorlar', stats?.activeDoctors],
-  ];
-  return (
-    <section className="figures" aria-label="Bugungi ko'rsatkichlar">
-      {items.map(([label, value]) => (
-        <div className="figure" key={label}>
-          {stats || failed ? <b>{failed ? '—' : value}</b> : <b className="skeleton">&nbsp;</b>}
-          <span>{label}</span>
-        </div>
-      ))}
-    </section>
-  );
-}
-
-/* ---------- Shifokorlar katalogi ---------- */
-function DoctorRow({ doctor: d }) {
-  return (
-    <li className="doctor-row">
-      <div className="avatar" aria-hidden="true">{initials(d.fullName)}</div>
-      <div>
-        <h3>{d.fullName}</h3>
-        <div className="meta">{d.specialty}, {d.experienceYears} yil tajriba, {d.room}-xona</div>
-        {!d.isActive && <span className="pill pill-inactive" style={{ marginTop: '.3rem' }}>Hozir qabul qilmaydi</span>}
-      </div>
-      <div>
-        <div className="small muted">{d.workStart}–{d.workEnd}, har {d.slotMinutes} daqiqa</div>
-        <WeekStrip workDays={d.workDays} />
-      </div>
-      <div>
-        <Link className={`btn btn-sm ${d.isActive ? 'btn-ticket' : 'btn-ghost'}`} href={`/doctors/${d.id}`}>
-          {d.isActive ? 'Vaqt tanlash' : 'Batafsil'}
-        </Link>
-      </div>
-    </li>
-  );
-}
+const FAQ = [
+  ['Yozilish pullikmi?', "Yo'q. Navbat faqat qabul vaqtini band qiladi. Qabulning o'zi poliklinika qoidalari bo'yicha bo'ladi"],
+  ['Qancha oldin yozilish mumkin?', "Ko'pi bilan 30 kun oldinga"],
+  ["Bitta shifokorga kuniga ikki marta yozilsam bo'ladimi?", "Yo'q, bitta shifokorga bir kunda bir marta. Boshqa shifokorga shu kuni yozilish mumkin, faqat vaqtlar ustma-ust tushmasligi kerak"],
+  ["Kechiksam nima bo'ladi?", "Registratura qabulni \"kelmadi\" deb belgilashi mumkin. Imkon bo'lsa, oldindan bekor qiling va yangi vaqt tanlang"],
+  ["Chiptamni yo'qotib qo'ydim", "Mening chiptam sahifasiga yozilishda ko'rsatgan telefon raqamingizni kiriting. Chipta qayta chiqadi va uni chop etish mumkin"],
+];
 
 export default function HomePage() {
-  const [specialties, setSpecialties] = useState([]);
-  const [search, setSearch] = useState('');
-  const [query, setQuery] = useState('');
-  const [specialty, setSpecialty] = useState('');
-  const [state, setState] = useState({ loading: true, doctors: [], error: null });
-  const [reloadKey, setReloadKey] = useState(0);
-
-  useEffect(() => {
-    api.specialties().then(({ data }) => setSpecialties(data)).catch(() => setSpecialties([]));
-  }, []);
-
-  // Qidiruvni har harfda emas, 300 ms to'xtalishdan keyin yuboramiz
-  useEffect(() => {
-    const timer = setTimeout(() => setQuery(search.trim()), 300);
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  useEffect(() => {
-    let cancelled = false;
-    setState((s) => ({ ...s, loading: true, error: null }));
-    api.doctors({ search: query, specialty })
-      .then(({ data }) => { if (!cancelled) setState({ loading: false, doctors: data, error: null }); })
-      .catch((error) => { if (!cancelled) setState({ loading: false, doctors: [], error }); });
-    return () => { cancelled = true; };
-  }, [query, specialty, reloadKey]);
-
-  const filtered = Boolean(query || specialty);
-  const resetFilters = () => { setSearch(''); setQuery(''); setSpecialty(''); };
-
   return (
-    <>
-      <Hero specialties={specialties} />
-
-      <Figures />
-
-      <section aria-labelledby="doctors-title">
-        <div className="page-head">
-          <div>
-            <h2 id="doctors-title">Shifokorlar</h2>
-            <p>Shifokorni tanlang va uning kunlik jadvalidan bo&apos;sh vaqtni band qiling.</p>
+    <div className="landing">
+      <section className="ld-hero">
+        <div className="ld-hero-copy">
+          <p className="hero2-kicker">Poliklinika uchun onlayn navbat</p>
+          <h1>Poliklinikada navbat endi yo&apos;lakda emas, telefoningizda</h1>
+          <p className="ld-lead">
+            Navbat — shifokor qabuliga oldindan yozilish tizimi. Erta tongda kelib, eshik oldida soatlab turish o&apos;rniga
+            uyda o&apos;tirib bo&apos;sh vaqtni tanlaysiz va aynan o&apos;sha vaqtda kelasiz
+          </p>
+          <div className="hero2-actions">
+            <Link className="btn btn-ticket" href="/shifokorlar">Shifokorlarni ko&apos;rish <span aria-hidden="true">→</span></Link>
+            <a className="btn btn-ghost" href="#qanday">Qanday ishlaydi</a>
           </div>
         </div>
-
-        <div className="toolbar">
-          <label className="search">
-            <span className="sr-only">Shifokor yoki mutaxassislik bo&apos;yicha qidirish</span>
-            <SearchIcon />
-            <input
-              className="input"
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Ism yoki mutaxassislik, masalan: kardiolog"
-              autoComplete="off"
-            />
-          </label>
-          <div className="chips" role="group" aria-label="Mutaxassislik bo'yicha filtr">
-            {[{ name: '' }, ...specialties].map((s) => (
-              <button
-                key={s.name || 'all'}
-                type="button"
-                className="chip"
-                aria-pressed={specialty === s.name}
-                onClick={() => setSpecialty(s.name)}
-              >
-                {s.name || 'Hammasi'}
-              </button>
-            ))}
+        <figure className="ld-ticket" aria-label="Navbat chiptasi namunasi">
+          <div className="ld-ticket-main">
+            <small>Navbat chiptasi</small>
+            <b>Terapevt</b>
+            <dl>
+              <div><dt>Sana</dt><dd>Dushanba</dd></div>
+              <div><dt>Vaqt</dt><dd>09:40</dd></div>
+            </dl>
           </div>
-        </div>
-
-        {state.loading && <Loading text="Shifokorlar yuklanmoqda" />}
-        {!state.loading && state.error && <ErrorState error={state.error} onRetry={() => setReloadKey((k) => k + 1)} />}
-        {!state.loading && !state.error && state.doctors.length === 0 && (
-          <EmptyState
-            title="Shifokor topilmadi"
-            text={filtered ? "Qidiruv so'zini o'zgartiring yoki filtrni olib tashlang." : "Hozircha shifokorlar qo'shilmagan."}
-          >
-            {filtered
-              ? <button type="button" className="btn btn-ghost btn-sm" onClick={resetFilters}>Filtrni tozalash</button>
-              : <Link className="btn btn-primary btn-sm" href="/yonalishlar">Yo&apos;nalishlar</Link>}
-          </EmptyState>
-        )}
-        {!state.loading && !state.error && state.doctors.length > 0 && (
-          <ul className="doctor-list">
-            {state.doctors.map((d) => <DoctorRow key={d.id} doctor={d} />)}
-          </ul>
-        )}
+          <div className="ld-ticket-stub">
+            <span className="ld-no"><small>№</small>03</span>
+            <span>104-xona</span>
+          </div>
+          <figcaption>Yozilganingizdan keyin shunday chipta olasiz</figcaption>
+        </figure>
       </section>
-    </>
+
+      <section className="ld-problem">
+        <h2>Nima uchun kerak</h2>
+        <div className="ld-problem-grid">
+          <div>
+            <b>Hozir qanday</b>
+            <p>Bemor ertalab erta keladi, registraturada navbat oladi, keyin shifokor xonasi oldida yana kutadi. Qaysi shifokor qachon ishlashini bilish uchun ham poliklinikaga borish kerak</p>
+          </div>
+          <div>
+            <b>Navbat bilan</b>
+            <p>Shifokorlar jadvali internetda ochiq. Bo&apos;sh vaqtni o&apos;zingiz tanlaysiz, chipta telefoningizda qoladi. Poliklinikaga qabul vaqtiga yaqin kelasiz</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="ld-section" id="qanday">
+        <div className="ld-section-head">
+          <h2>Qanday ishlatiladi</h2>
+          <p className="muted">To&apos;rt qadam. Ro&apos;yxatdan o&apos;tish shart emas</p>
+        </div>
+        <ol className="ld-steps">
+          {STEPS.map((s, i) => (
+            <li key={s.title}>
+              <span className="ld-step-no">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{s.title}</h3>
+              <p>{s.text}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="ld-section">
+        <div className="ld-section-head">
+          <h2>Chiptani qanday o&apos;qish kerak</h2>
+          <p className="muted">Chiptada uchta asosiy narsa bor</p>
+        </div>
+        <div className="ld-read-grid">
+          <div className="ld-read-item"><span className="ld-tag">№ 03</span><p><b>Chipta raqami.</b> Shu kun shu shifokorga nechanchi bo&apos;lib kirishingiz. Yo&apos;lakdagi tabloda aynan shu raqam chiqadi</p></div>
+          <div className="ld-read-item"><span className="ld-tag">104-xona</span><p><b>Xona.</b> Shifokor qabul qiladigan xona. Raqamning birinchi soni — qavat</p></div>
+          <div className="ld-read-item"><span className="ld-tag">09:40</span><p><b>Vaqt.</b> Qabul boshlanadigan vaqt. 5–10 daqiqa oldin kelsangiz yetarli</p></div>
+        </div>
+      </section>
+
+      <section className="ld-section">
+        <div className="ld-section-head">
+          <h2>Nimalar qila olasiz</h2>
+        </div>
+        <ul className="ld-features">
+          {FEATURES.map(([title, text]) => (
+            <li key={title}><b>{title}</b><p>{text}</p></li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="ld-section">
+        <div className="ld-section-head">
+          <h2>Ko&apos;p beriladigan savollar</h2>
+        </div>
+        <div className="ld-faq">
+          {FAQ.map(([q, a]) => (
+            <details key={q}>
+              <summary>{q}</summary>
+              <p>{a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="ld-cta">
+        <div>
+          <h2>Kerakli shifokorni toping</h2>
+          <p>Xona raqami, ish vaqti va bo&apos;sh vaqtlar bir sahifada</p>
+        </div>
+        <div className="hero2-actions">
+          <Link className="btn btn-ticket" href="/shifokorlar">Shifokorlar <span aria-hidden="true">→</span></Link>
+          <Link className="btn ld-cta-ghost" href="/chipta">Mening chiptam</Link>
+        </div>
+      </section>
+    </div>
   );
 }

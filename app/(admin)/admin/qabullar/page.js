@@ -201,7 +201,7 @@ export default function AppointmentsPage() {
           <h1 style={{ fontSize: 'var(--step-4)' }}>Qabullar</h1>
           <p>Registratura uchun: qabullarni toping, vaqtini ko&apos;chiring, bo&apos;lib o&apos;tganini yoki bemor kelmaganini belgilang.</p>
         </div>
-        <Link className="btn btn-ticket" href="/">Yangi qabul</Link>
+        <Link className="btn btn-ticket" href="/shifokorlar">Yangi qabul</Link>
       </div>
 
       <section className="panel">
@@ -246,7 +246,7 @@ export default function AppointmentsPage() {
               title={isFiltered ? 'Mos qabul topilmadi' : "Hali qabullar yo'q"}
               text={isFiltered ? "Filtrlarni o'zgartirib ko'ring." : "Bemor shifokorni tanlab yozilgach, qabullar shu yerda ko'rinadi."}
             >
-              {!isFiltered && <Link className="btn btn-primary btn-sm" href="/">Qabulga yozish</Link>}
+              {!isFiltered && <Link className="btn btn-primary btn-sm" href="/shifokorlar">Qabulga yozish</Link>}
             </EmptyState>
           )}
           {!state.loading && !state.error && items.length > 0 && (

@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const LINKS = [
-  { href: '/', label: 'Shifokorlar', match: (p) => p === '/' || p.startsWith('/doctors') },
+  { href: '/', label: 'Bosh sahifa', match: (p) => p === '/' },
+  { href: '/shifokorlar', label: 'Shifokorlar', match: (p) => p.startsWith('/shifokorlar') || p.startsWith('/doctors') },
   { href: '/yonalishlar', label: "Yo'nalishlar", match: (p) => p.startsWith('/yonalishlar') },
   { href: '/chipta', label: 'Mening chiptam', match: (p) => p.startsWith('/chipta') },
   { href: '/qanday-ishlaydi', label: 'Qanday ishlaydi', match: (p) => p.startsWith('/qanday-ishlaydi') },

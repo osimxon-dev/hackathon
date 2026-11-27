@@ -1,3 +1,4 @@
+import { appointmentFields, logEvent } from '../activity.js';
 import { one, query } from '../db.js';
 import { conflict, notFound } from '../http.js';
 import { APPOINTMENT_SELECT, toAppointment, toDoctor } from '../mappers.js';
@@ -103,7 +104,9 @@ async function create({ body }) {
   } catch (err) {
     throw mapDbConflict(err);
   }
-  return { status: 201, body: { data: await findAppointment(row.id) } };
+  const created = await findAppointment(row.id);
+  await logEvent('appointment.created', appointmentFields(created));
+  return { status: 201, body: { data: created } };
 }
 
 /** PATCH /api/appointments/:id — ma'lumotni tahrirlash, ko'chirish yoki holatini o'zgartirish */
@@ -145,7 +148,13 @@ async function update({ params, body }) {
   } catch (err) {
     throw mapDbConflict(err);
   }
-  return { status: 200, body: { data: await findAppointment(id) } };
+  const updated = await findAppointment(id);
+  const event = nextStatus !== current.status ? `appointment.${nextStatus}` : touchesSlot ? 'appointment.moved' : 'appointment.edited';
+  await logEvent(event, {
+    ...appointmentFields(updated),
+    ...(touchesSlot && { from: { doctorId: current.doctorId, date: current.appointmentDate, time: current.startTime } }),
+  });
+  return { status: 200, body: { data: updated } };
 }
 
 /** DELETE /api/appointments/:id — bo'lib o'tgan qabul tibbiy tarix sifatida saqlanadi */
@@ -156,6 +165,7 @@ async function remove({ params }) {
     throw conflict('Bo\'lib o\'tgan qabul tibbiy tarix hisoblanadi va o\'chirilmaydi');
   }
   await one('DELETE FROM appointments WHERE id = $1 RETURNING id', [id]);
+  await logEvent('appointment.deleted', appointmentFields(current));
   return { status: 204 };
 }
 

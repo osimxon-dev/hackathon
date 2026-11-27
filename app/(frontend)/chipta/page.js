@@ -82,7 +82,7 @@ export default function MyTicketPage() {
         {state.status === 'error' && <ErrorState error={state.error} onRetry={find} />}
         {state.status === 'done' && state.list.length === 0 && (
           <EmptyState title="Bu raqamga qabul topilmadi" text={`${formatPhone(normalize(phone))} raqamiga yozilgan qabul yo'q. Raqamni tekshiring yoki yangi qabulga yoziling.`}>
-            <Link className="btn btn-ticket btn-sm" href="/">Qabulga yozilish</Link>
+            <Link className="btn btn-ticket btn-sm" href="/shifokorlar">Qabulga yozilish</Link>
           </EmptyState>
         )}
 

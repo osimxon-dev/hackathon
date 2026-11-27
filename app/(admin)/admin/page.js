@@ -50,6 +50,7 @@ export default function StatsPage() {
       {loading && !stats && <Loading text="Statistika yuklanmoqda" />}
       {error && <ErrorState error={error} onRetry={load} />}
       {stats && <StatsBody stats={stats} week={week} />}
+      <ActivityLog />
     </>
   );
 }
@@ -122,5 +123,71 @@ function StatsBody({ stats, week }) {
         )}
       </section>
     </div>
+  );
+}
+
+const EVENT_LABELS = {
+  'appointment.created': 'Yangi qabul',
+  'appointment.moved': "Qabul ko'chirildi",
+  'appointment.edited': 'Qabul tahrirlandi',
+  'appointment.completed': "Qabul bo'ldi",
+  'appointment.cancelled': 'Qabul bekor qilindi',
+  'appointment.no_show': 'Bemor kelmadi',
+  'appointment.deleted': "Qabul o'chirildi",
+  'doctor.created': "Shifokor qo'shildi",
+  'doctor.updated': 'Shifokor tahrirlandi',
+  'doctor.deleted': "Shifokor o'chirildi",
+};
+
+/* Faollik jurnali — MongoDB'dan o'qiladi */
+function ActivityLog() {
+  const [state, setState] = useState({ loading: true, data: [], enabled: true, error: null });
+
+  const load = useCallback(async () => {
+    setState((s) => ({ ...s, loading: true, error: null }));
+    try {
+      const { data, meta } = await api.activity({ limit: 20 });
+      setState({ loading: false, data, enabled: meta.enabled, error: null });
+    } catch (error) {
+      setState({ loading: false, data: [], enabled: true, error });
+    }
+  }, []);
+
+  useEffect(() => { load(); }, [load]);
+  const { loading, data, enabled, error } = state;
+
+  return (
+    <section className="panel activity" style={{ marginTop: '1.5rem' }}>
+      <div className="activity-head">
+        <div>
+          <h2>Faollik jurnali</h2>
+          <p className="muted small">Har bir yozilish, ko&apos;chirish va holat o&apos;zgarishi MongoDB&apos;da hujjat sifatida saqlanadi</p>
+        </div>
+        <span className="activity-badge">MongoDB</span>
+      </div>
+      {loading && <Loading text="Jurnal yuklanmoqda" />}
+      {error && <ErrorState error={error} onRetry={load} />}
+      {!loading && !error && !enabled && (
+        <p className="muted" style={{ margin: 0 }}>Jurnal o&apos;chiq: serverda MONGODB_URI o&apos;rnatilmagan</p>
+      )}
+      {!loading && !error && enabled && data.length === 0 && (
+        <p className="muted" style={{ margin: 0 }}>Hali hodisa yo&apos;q. Qabulga yozilish yoki holat o&apos;zgarishi shu yerda chiqadi</p>
+      )}
+      {!loading && data.length > 0 && (
+        <ol className="activity-list">
+          {data.map((e) => (
+            <li key={e.id}>
+              <time>{new Date(e.at).toLocaleString('uz-UZ', { timeZone: 'Asia/Tashkent', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</time>
+              <b className={`ev ev-${e.type.split('.')[1]}`}>{EVENT_LABELS[e.type] || e.type}</b>
+              <span>
+                {e.doctorName || `Shifokor #${e.doctorId}`}
+                {e.date && ` · ${e.date} ${e.time}`}
+                {e.ticketNumber && ` · № ${String(e.ticketNumber).padStart(2, '0')}`}
+              </span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </section>
   );
 }

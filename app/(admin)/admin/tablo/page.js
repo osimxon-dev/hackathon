@@ -126,7 +126,7 @@ export default function BoardPage() {
         {!loading && !error && groups.length === 0 && (
           <div className="board-state">
             <EmptyState title="Bu kunga qabullar yo'q" text="Boshqa kunni tanlang yoki bemorni qabulga yozing.">
-              <Link className="btn btn-ticket btn-sm" href="/">Qabulga yozish</Link>
+              <Link className="btn btn-ticket btn-sm" href="/shifokorlar">Qabulga yozish</Link>
             </EmptyState>
           </div>
         )}

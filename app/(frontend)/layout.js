@@ -17,7 +17,7 @@ export default function FrontendLayout({ children }) {
           </div>
           <nav aria-label="Bemorlar uchun">
             <b>Bemorlar uchun</b>
-            <Link href="/">Shifokorlar</Link>
+            <Link href="/shifokorlar">Shifokorlar</Link>
             <Link href="/yonalishlar">Yo&apos;nalishlar</Link>
             <Link href="/chipta">Mening chiptam</Link>
             <Link href="/qanday-ishlaydi">Qanday ishlaydi</Link>

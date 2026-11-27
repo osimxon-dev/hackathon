@@ -86,6 +86,8 @@ DATABASE_URL=postgresql://localhost/navbat_test SEED_DEMO_DATA=false npm test
 | `DATABASE_URL` | PostgreSQL ulanish satri (Vercel + Neon integratsiyasida avtomatik qo'yiladi). `POSTGRES_URL` ham qabul qilinadi |
 | `SEED_DEMO_DATA` | `false` bo'lsa demo ma'lumot qo'shilmaydi |
 | `DB_POOL_MAX` | Ulanishlar havzasi hajmi (standart 3) |
+| `MONGODB_URI` | Ixtiyoriy. MongoDB (Atlas) ulanish satri: faollik jurnali (`/api/activity`) shu yerga yoziladi. Berilmasa jurnal o'chiq turadi, qolgan hammasi ishlayveradi |
+| `MONGODB_DB` | MongoDB baza nomi (standart `navbat`) |
 | `ADMIN_PASSWORD` | Registratura paneli (`/admin`) paroli. O'rnatilmasa panelga kirib bo'lmaydi |
 
 Maxfiy ma'lumotlar kodda yozilmaydi: `.env` git'ga kirmaydi, namunasi `.env.example` faylida.
@@ -163,7 +165,8 @@ Har bir sahifada yuklanish, xato (qayta urinish tugmasi bilan) va bo'sh holatlar
 ## Texnologiyalar
 
 - **Next.js 15** (App Router), **React 19**: frontend va API route handler'lar bitta loyihada
-- **PostgreSQL** (Neon) + **pg** drayveri, ORM'siz parametrlangan SQL
+- **PostgreSQL** (Neon) + **pg** drayveri, ORM'siz parametrlangan SQL: shifokorlar, qabullar va 12 ta biznes qoida
+- **MongoDB** (ixtiyoriy): faollik jurnali, har bir yozilish/ko'chirish/bekor qilish hujjat sifatida saqlanadi
 - **Zod**: serverda kiruvchi ma'lumotlarni tekshirish
 - **node:test**: API avtotestlari
 - **Vercel**: deploy
@@ -173,7 +176,8 @@ Har bir sahifada yuklanish, xato (qayta urinish tugmasi bilan) va bo'sh holatlar
 ```
 app/
   (frontend)/         BEMOR SAYTI (o'z header va footeri bilan)
-    page.js           Shifokorlar + eng yaqin bo'sh navbat
+    page.js           Bosh sahifa: tizim nima va qanday ishlatiladi (yozilish yo'q)
+    shifokorlar/      Poliklinika ko'rsatkichi va shifokorlar ro'yxati
     doctors/[id]/     Vaqt tanlash, yozilish, chipta
     yonalishlar/      Yo'nalishlar va har biri uchun eng yaqin bo'sh vaqt
     chipta/           Mening chiptam: telefon orqali qabullarni topish, bekor qilish

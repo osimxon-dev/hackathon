@@ -42,7 +42,7 @@ export default function HowItWorksPage() {
       </ol>
 
       <div className="how-cta">
-        <Link className="btn btn-ticket" href="/">Shifokor tanlash</Link>
+        <Link className="btn btn-ticket" href="/shifokorlar">Shifokor tanlash</Link>
         <Link className="btn btn-ghost" href="/chipta">Chiptamni topish</Link>
       </div>
 
