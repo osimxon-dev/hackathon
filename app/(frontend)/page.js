@@ -1,79 +1,72 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EmptyState, ErrorState, Loading, SearchIcon, WeekStrip } from '@/components/ui';
 import { api } from '@/lib/api';
-import { initials, nowTime, pad, relativeDay } from '@/lib/format';
+import { initials, nowTime, pad } from '@/lib/format';
 
-/* ---------- Tezkor yozilish: mutaxassislik -> bo'sh vaqt -> yozilish ---------- */
-function QuickBook({ specialties }) {
-  const [specialty, setSpecialty] = useState('');
-  const [state, setState] = useState({ loading: true, slot: null, times: [], error: null });
+/* ---------- Hero ko'rgazmasi: 3 qadam o'zi almashadi, bosish ham mumkin (yozilish emas) ---------- */
+const HOW = [
+  { title: 'Shifokorni tanlang', text: "Ro'yxatdan yoki yo'nalish bo'yicha tanlaysiz" },
+  { title: "Bo'sh vaqtni bosing", text: "Band va o'tgan vaqtlar yopiq, faqat bo'shlari bosiladi" },
+  { title: 'Chiptani oling', text: 'Raqam, xona va vaqt telefoningizda qoladi' },
+];
+const DEMO_TIMES = ['09:00', '09:20', '09:40', '10:00', '10:20', '10:40'];
 
-  const load = useCallback(async () => {
-    setState((s) => ({ ...s, loading: true, error: null }));
-    try {
-      const { data } = await api.nearest({ specialty });
-      if (!data) {
-        setState({ loading: false, slot: null, times: [], error: null });
-        return;
-      }
-      const { data: day } = await api.doctorSlots(data.doctor.id, data.date);
-      const times = day.slots.filter((t) => t.status === 'free').slice(0, 6);
-      setState({ loading: false, slot: data, times, error: null });
-    } catch (error) {
-      setState({ loading: false, slot: null, times: [], error });
-    }
-  }, [specialty]);
-
-  useEffect(() => { load(); }, [load]);
-  const { loading, slot, times, error } = state;
+function HowSteps({ specialties }) {
+  const [step, setStep] = useState(0);
+  const [paused, setPaused] = useState(false);
+  useEffect(() => {
+    if (paused) return undefined;
+    const timer = setInterval(() => setStep((n) => (n + 1) % HOW.length), 3500);
+    return () => clearInterval(timer);
+  }, [paused, step]);
+  const names = specialties.length ? specialties.slice(0, 3).map((s) => s.name) : ['Terapevt', 'Kardiolog', 'Pediatr'];
 
   return (
-    <div className="qb">
-      <p className="qb-step"><span className="qb-n">1</span>Kim kerak?</p>
-      <div className="qb-chips" role="group" aria-label="Mutaxassislik">
-        {[{ name: '' }, ...specialties].map((s) => (
-          <button key={s.name || 'all'} type="button" className="qb-chip" aria-pressed={specialty === s.name} onClick={() => setSpecialty(s.name)}>
-            {s.name || 'Istalgan'}
+    <div className="hs" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} aria-label="Qanday ishlaydi">
+      <div className="hs-tabs" role="tablist">
+        {HOW.map((h, i) => (
+          <button key={h.title} type="button" role="tab" aria-selected={i === step} className="hs-tab" onClick={() => setStep(i)}>
+            <span className="qb-n">{i + 1}</span>
+            <b>{h.title}</b>
+            {i === step && <i className={`hs-progress ${paused ? 'is-paused' : ''}`} />}
           </button>
         ))}
       </div>
-
-      <p className="qb-step"><span className="qb-n">2</span>Vaqtni bosing</p>
-      <div className="qb-result" aria-live="polite" aria-busy={loading || undefined}>
-        {loading && (
+      <div className="hs-stage" key={step} aria-hidden="true">
+        {step === 0 && (
+          <ul className="hs-list">
+            {names.map((n, i) => (
+              <li key={n} className={i === 0 ? 'is-on' : ''} style={{ '--i': i }}>
+                <span className="avatar">{n.slice(0, 2).toUpperCase()}</span>
+                <span><b>{n}</b><small>Mutaxassis</small></span>
+                <span className="hs-go">→</span>
+              </li>
+            ))}
+          </ul>
+        )}
+        {step === 1 && (
           <div className="qb-times">
-            {Array.from({ length: 6 }, (_, i) => <span key={i} className="qb-time skeleton" />)}
+            {DEMO_TIMES.map((t, i) => {
+              const off = i === 1 || i === 4;
+              return (
+                <span key={t} className={`qb-time ${i === 2 ? 'is-first' : ''} ${off ? 'is-off' : ''}`} style={{ '--i': i }}>
+                  <b>{t}</b><span>{i === 2 ? 'tanlandi' : off ? 'band' : `№ ${pad(i + 1)}`}</span>
+                </span>
+              );
+            })}
           </div>
         )}
-        {error && <ErrorState error={error} onRetry={load} />}
-        {!loading && !error && !slot && (
-          <p className="qb-empty">Yaqin 14 kunda bo&apos;sh vaqt topilmadi. Boshqa mutaxassisni tanlang</p>
-        )}
-        {!loading && slot && (
-          <>
-            <Link className="qb-doctor" href={`/doctors/${slot.doctor.id}?date=${slot.date}`}>
-              <span className="avatar" aria-hidden="true">{initials(slot.doctor.fullName)}</span>
-              <span className="qb-doctor-text">
-                <b>{slot.doctor.fullName}</b>
-                <span>{slot.doctor.specialty} · {slot.doctor.room}-xona · {relativeDay(slot.date)}</span>
-              </span>
-              <span className="qb-arrow" aria-hidden="true">→</span>
-            </Link>
-            <div className="qb-times">
-              {times.map((t, i) => (
-                <Link key={t.time} className={`qb-time ${i === 0 ? 'is-first' : ''}`} style={{ '--i': i }}
-                  href={`/doctors/${slot.doctor.id}?date=${slot.date}&time=${t.time}`}>
-                  <b>{t.time}</b>
-                  <span>{i === 0 ? 'eng yaqin' : `№ ${pad(t.ticketNumber)}`}</span>
-                </Link>
-              ))}
-            </div>
-          </>
+        {step === 2 && (
+          <div className="hs-ticket">
+            <div><small>Navbat chiptasi</small><b>{names[0]}</b><span>Bugun, 09:40</span></div>
+            <div className="hs-stub"><b><small>№</small>03</b><span>xona raqami</span></div>
+          </div>
         )}
       </div>
+      <p className="hs-caption">{HOW[step].text}</p>
     </div>
   );
 }
@@ -100,13 +93,13 @@ function Hero({ specialties }) {
         <div className="hero-copy">
           <p className="hero-live"><i aria-hidden="true" />Toshkent vaqti {clock}{doctors > 0 && ` · ${doctors} shifokor jadvalda`}</p>
           <h1>Shifokorga navbatni <span className="hl">uydan</span> oling</h1>
-          <p className="hero-lead">Poliklinika yo&apos;lagida soatlab kutish shart emas. Mutaxassisni tanlang, bo&apos;sh vaqtni bosing, chiptangiz telefoningizda bo&apos;ladi</p>
+          <p className="hero-lead">Poliklinika yo&apos;lagida soatlab kutish shart emas. Shifokorni tanlang, uning jadvalidan bo&apos;sh vaqtni band qiling, chiptangiz telefoningizda bo&apos;ladi</p>
           <div className="hero-actions">
-            <a className="btn btn-ticket" href="#doctors-title">Barcha shifokorlar</a>
+            <a className="btn btn-ticket" href="#doctors-title">Shifokor tanlash</a>
             <Link className="btn hero-ghost" href="/chipta">Mening chiptam</Link>
           </div>
         </div>
-        <QuickBook specialties={specialties} />
+        <HowSteps specialties={specialties} />
       </div>
     </section>
   );
