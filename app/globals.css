@@ -80,7 +80,7 @@ h3 { font-size: var(--step-1); }
 .lead { font-size: var(--step-1); color: var(--ink-soft); max-width: 34ch; margin: 1rem 0 0; line-height: 1.45; }
 .muted { color: var(--muted); }
 .small { font-size: var(--step--1); }
-.page-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+.page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
 .page-head p { margin: .35rem 0 0; color: var(--muted); max-width: 60ch; }
 
 /* ---------- Buttons & inputs ---------- */
@@ -137,7 +137,7 @@ textarea.input { min-height: 88px; resize: vertical; }
 /* ---------- Home ---------- */
 .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 3rem; align-items: center; padding-block: 1.5rem 3rem; }
 .finder { display: grid; gap: 1rem; }
-.finder-controls { display: flex; gap: .6rem; flex-wrap: wrap; align-items: end; }
+.finder-controls { display: flex; gap: .6rem; flex-wrap: wrap; align-items: flex-end; }
 .finder-controls .field { flex: 1 1 200px; }
 .figures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1.5px solid var(--ink); border-bottom: 1px solid var(--line); margin-bottom: 3rem; }
 .figure { padding: 1rem 1.1rem; border-right: 1px solid var(--line); }
