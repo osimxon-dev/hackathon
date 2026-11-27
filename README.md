@@ -1,5 +1,15 @@
 # Navbat — shifokor qabuliga onlayn yozilish
 
+**Jonli sayt:** https://hackathon-silk-gamma-42.vercel.app
+
+### Registratura paneliga (admin) kirish
+
+1. https://hackathon-silk-gamma-42.vercel.app/kirish sahifasini oching (yoki `/admin` ga o'ting, o'zi shu sahifaga yo'naltiradi)
+2. Parol: `algoritm_00`
+3. Panelda: umumiy ko'rinish, qabullar, shifokorlar (qo'shish, tahrirlash, o'chirish) va yo'lak tablosi
+
+Bemor sayti (`/`, `/shifokorlar`, `/chipta`) parolsiz ochiq. Bu parol faqat hakamlar uchun demo sifatida yozilgan, haqiqiy qiymat Vercel'da `ADMIN_PASSWORD` muhit o'zgaruvchisida turadi va kodda saqlanmaydi.
+
 **Yo'nalish:** HealthTech (tibbiyot va salomatlik)
 
 ## Qanday muammo?
