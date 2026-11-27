@@ -209,7 +209,7 @@ export default function HomePage() {
           >
             {filtered
               ? <button type="button" className="btn btn-ghost btn-sm" onClick={resetFilters}>Filtrni tozalash</button>
-              : <Link className="btn btn-primary btn-sm" href="/admin/shifokorlar">Shifokor qo&apos;shish</Link>}
+              : <Link className="btn btn-primary btn-sm" href="/yonalishlar">Yo&apos;nalishlar</Link>}
           </EmptyState>
         )}
         {!state.loading && !state.error && state.doctors.length > 0 && (

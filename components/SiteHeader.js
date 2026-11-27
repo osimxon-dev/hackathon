@@ -26,7 +26,6 @@ export default function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <Link className="staff-link" href="/admin">Registratura</Link>
       </div>
     </header>
   );

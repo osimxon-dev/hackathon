@@ -73,12 +73,10 @@ export default function HowItWorksPage() {
         <div className="role">
           <h2>Registratura uchun</h2>
           <p>Qabullarni qidirish, ko&apos;chirish, holatini belgilash, yo&apos;lak uchun navbat tablosi va kunlik statistika</p>
-          <Link href="/admin/qabullar">Qabullar</Link>
         </div>
         <div className="role">
           <h2>Bosh shifokor uchun</h2>
           <p>Shifokorlar jadvali: ish kunlari, soatlar, qabul davomiyligi. Jadval o&apos;zgarsa, mavjud qabullar tekshiriladi</p>
-          <Link href="/admin/shifokorlar">Shifokorlar jadvali</Link>
         </div>
       </section>
     </>

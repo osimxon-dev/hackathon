@@ -3,31 +3,35 @@
    Ranglar: siyoh-yashil (matn), yalpiz qog'oz (fon), chipta sarig'i (aksent). */
 
 :root {
-  --ink: #10343a;
-  --ink-soft: #2c5157;
-  --muted: #5b7470;
-  --paper: #eef4f2;
-  --card: #ffffff;
-  --line: #cfe0da;
-  --sage: #dcebe6;
-  --ticket: #f4c542;
-  --ticket-deep: #d9a514;
-  --ok: #2f7d5b;
-  --ok-bg: #e1f1e8;
-  --alert: #b8412e;
-  --alert-bg: #fbe7e2;
-  --wait: #8a6a00;
-  --wait-bg: #fdf3d3;
-  --off: #6d7f7c;
-  --off-bg: #e8eeec;
+  /* 60% — iliq qog'oz: fon va kartochkalar */
+  --paper: #f5f1e8;
+  --card: #fffdf8;
+  --sage: #ece5d6;
+  --line: #e0d8c6;
+  /* 30% — tungi ko'k: header, panel, tablo, matn, asosiy tugmalar */
+  --ink: #13233a;
+  --ink-soft: #263a58;
+  --muted: #5f6878;
+  /* 10% — signal to'q sariq: faqat harakat, chipta va tanlov */
+  --ticket: #ff5a1f;
+  --ticket-deep: #d9420b;
+  --ticket-soft: #ffe4d6;
+  --ok: #1f7a55;
+  --ok-bg: #e0f1e7;
+  --alert: #c0392b;
+  --alert-bg: #fbe3df;
+  --wait: #9a4300;
+  --wait-bg: #ffe9d9;
+  --off: #737b86;
+  --off-bg: #ebe6db;
 
   --font-ui: 'Onest', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Unbounded', 'Onest', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Onest', system-ui, sans-serif;
 
   --r-sm: 6px;
   --r-md: 12px;
   --r-lg: 20px;
-  --shadow-ticket: 0 1px 0 var(--line), 0 18px 40px -24px rgba(16, 52, 58, 0.45);
+  --shadow-ticket: 0 1px 0 var(--line), 0 18px 40px -24px rgba(19, 35, 58, 0.45);
 
   --step--1: 0.875rem;
   --step-0: 1rem;
@@ -69,7 +73,7 @@ main { flex: 1; padding-block: 2rem 4rem; }
           mask: radial-gradient(circle 4px at 0 50%, #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle 4px at 100% 50%, #0000 98%, #000) right / 51% 100% no-repeat; }
 .nav { display: flex; gap: .25rem; margin-left: auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .nav a { white-space: nowrap; }
-.nav a { text-decoration: none; padding: .45rem .8rem; border-radius: 999px; color: #d5e6e1; font-size: var(--step--1); font-weight: 500; }
+.nav a { text-decoration: none; padding: .45rem .8rem; border-radius: 999px; color: #c9d3e2; font-size: var(--step--1); font-weight: 500; }
 .nav a:hover { color: #fff; background: rgba(255,255,255,.08); }
 .nav a[aria-current='page'] { background: var(--ticket); color: var(--ink); }
 
@@ -91,10 +95,10 @@ h3 { font-size: var(--step-1); }
 .btn-primary { background: var(--ink); color: #fff; }
 .btn-primary:hover { background: var(--ink-soft); }
 .btn-ticket { background: var(--ticket); color: var(--ink); }
-.btn-ticket:hover { background: #f7d062; }
+.btn-ticket:hover { background: #ff7440; }
 .btn-ghost { background: transparent; border-color: var(--line); color: var(--ink); }
 .btn-ghost:hover { border-color: var(--ink); }
-.btn-danger { background: transparent; border-color: #e6b8ae; color: var(--alert); }
+.btn-danger { background: transparent; border-color: #efb9ae; color: var(--alert); }
 .btn-danger:hover { background: var(--alert-bg); }
 .btn-sm { padding: .4rem .8rem; font-size: .8rem; }
 
@@ -102,9 +106,9 @@ h3 { font-size: var(--step-1); }
 .field label, .field .label { font-size: var(--step--1); font-weight: 600; }
 .field .hint { font-size: .8rem; color: var(--muted); }
 .field .error-text { font-size: .8rem; color: var(--alert); min-height: 0; }
-.input, select.input, textarea.input { width: 100%; border: 1.5px solid var(--line); background: #fff; border-radius: var(--r-sm); padding: .65rem .8rem; min-height: 44px; }
+.input, select.input, textarea.input { width: 100%; border: 1.5px solid var(--line); background: var(--card); border-radius: var(--r-sm); padding: .65rem .8rem; min-height: 44px; }
 textarea.input { min-height: 88px; resize: vertical; }
-.input:focus { border-color: var(--ink); outline: none; box-shadow: 0 0 0 3px rgba(244, 197, 66, .45); }
+.input:focus { border-color: var(--ink); outline: none; box-shadow: 0 0 0 3px rgba(255, 90, 31, .28); }
 .input[aria-invalid='true'] { border-color: var(--alert); }
 .form-grid { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .form-grid .full { grid-column: 1 / -1; }
@@ -121,7 +125,7 @@ textarea.input { min-height: 88px; resize: vertical; }
 /* ---------- Ticket (the signature element) ---------- */
 .ticket { position: relative; background: var(--card); border-radius: var(--r-md); box-shadow: var(--shadow-ticket); display: grid; grid-template-columns: 1fr auto; overflow: hidden; }
 .ticket-main { padding: 1.5rem 1.6rem; display: grid; gap: .9rem; align-content: start; }
-.ticket-stub { background: var(--ticket); padding: 1.5rem 1.4rem; display: grid; align-content: center; justify-items: center; text-align: center; min-width: 150px; position: relative; border-left: 2px dashed rgba(16, 52, 58, .35); }
+.ticket-stub { background: var(--ticket); padding: 1.5rem 1.4rem; display: grid; align-content: center; justify-items: center; text-align: center; min-width: 150px; position: relative; border-left: 2px dashed rgba(19, 35, 58, .35); }
 .ticket::before, .ticket::after { content: ''; position: absolute; width: 22px; height: 22px; border-radius: 50%; background: var(--paper); right: calc(150px - 11px); z-index: 2; }
 .ticket::before { top: -11px; }
 .ticket::after { bottom: -11px; }
@@ -151,7 +155,7 @@ textarea.input { min-height: 88px; resize: vertical; }
 .toolbar .search svg { position: absolute; left: .8rem; top: 50%; translate: 0 -50%; width: 18px; color: var(--muted); pointer-events: none; }
 .toolbar .search .input { padding-left: 2.4rem; border-radius: 999px; }
 .chips { display: flex; gap: .4rem; flex-wrap: wrap; }
-.chip { border: 1.5px solid var(--line); background: #fff; border-radius: 999px; padding: .35rem .85rem; font-size: .85rem; font-weight: 500; cursor: pointer; }
+.chip { border: 1.5px solid var(--line); background: var(--card); border-radius: 999px; padding: .35rem .85rem; font-size: .85rem; font-weight: 500; cursor: pointer; }
 .chip[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: #fff; }
 
 .doctor-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
@@ -172,22 +176,22 @@ textarea.input { min-height: 88px; resize: vertical; }
 .profile dt { font-size: .78rem; color: var(--muted); }
 .profile dd { margin: 0; font-weight: 600; }
 .days { display: flex; gap: .5rem; overflow-x: auto; padding-bottom: .5rem; scroll-snap-type: x mandatory; margin-bottom: 1.5rem; }
-.day { flex: 0 0 auto; scroll-snap-align: start; border: 1.5px solid var(--line); background: #fff; border-radius: var(--r-md); padding: .5rem .8rem; text-align: center; cursor: pointer; min-width: 68px; }
+.day { flex: 0 0 auto; scroll-snap-align: start; border: 1.5px solid var(--line); background: var(--card); border-radius: var(--r-md); padding: .5rem .8rem; text-align: center; cursor: pointer; min-width: 68px; }
 .day b { display: block; font-family: var(--font-display); font-size: 1.3rem; line-height: 1.1; }
 .day span { font-size: .75rem; color: var(--muted); }
 .day[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: #fff; }
 .day[aria-pressed='true'] span { color: #cfe0da; }
 .day.off { opacity: .45; }
 .slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: .6rem; }
-.slot { border: 1.5px solid var(--line); background: #fff; border-radius: var(--r-sm); padding: .6rem .5rem; text-align: center; cursor: pointer; display: grid; gap: .1rem; }
+.slot { border: 1.5px solid var(--line); background: var(--card); border-radius: var(--r-sm); padding: .6rem .5rem; text-align: center; cursor: pointer; display: grid; gap: .1rem; }
 .slot b { font-size: 1.05rem; }
 .slot span { font-size: .72rem; color: var(--muted); }
 .slot:hover:not([disabled]) { border-color: var(--ink); }
 .slot[aria-pressed='true'] { background: var(--ticket); border-color: var(--ticket-deep); }
 .slot[aria-pressed='true'] span { color: var(--ink); }
-.slot[disabled] { cursor: not-allowed; background: repeating-linear-gradient(-45deg, var(--off-bg) 0 6px, #f3f6f5 6px 12px); color: var(--off); border-color: transparent; }
+.slot[disabled] { cursor: not-allowed; background: repeating-linear-gradient(-45deg, var(--off-bg) 0 6px, #f8f4ec 6px 12px); color: var(--off); border-color: transparent; }
 .legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .8rem; color: var(--muted); margin: .9rem 0 0; }
-.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: .35rem; border: 1.5px solid var(--line); background: #fff; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: .35rem; border: 1.5px solid var(--line); background: var(--card); }
 .legend i.busy { background: var(--off-bg); border-color: transparent; }
 .legend i.sel { background: var(--ticket); border-color: var(--ticket-deep); }
 .booking { margin-top: 2rem; background: var(--card); border-radius: var(--r-lg); padding: 1.5rem; }
@@ -211,7 +215,7 @@ textarea.input { min-height: 88px; resize: vertical; }
 .state p { margin: 0; max-width: 46ch; }
 .state-error h3 { color: var(--alert); }
 .spinner { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--ink); animation: spin .8s linear infinite; }
-.skeleton { background: linear-gradient(90deg, var(--sage) 0, #e9f2ef 50%, var(--sage) 100%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 6px; min-height: 1em; }
+.skeleton { background: linear-gradient(90deg, var(--sage) 0, #f7f2e8 50%, var(--sage) 100%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 6px; min-height: 1em; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes shimmer { to { background-position: -200% 0; } }
 
@@ -224,7 +228,7 @@ textarea.input { min-height: 88px; resize: vertical; }
 .toast.error { background: var(--alert); }
 @keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
 dialog { border: 0; border-radius: var(--r-lg); padding: 0; width: min(560px, 100% - 2rem); color: var(--ink); }
-dialog::backdrop { background: rgba(16, 52, 58, .5); }
+dialog::backdrop { background: rgba(19, 35, 58, .5); }
 .dialog-body { padding: 1.5rem; display: grid; gap: 1rem; }
 .dialog-actions { display: flex; justify-content: flex-end; gap: .5rem; padding: 1rem 1.5rem; border-top: 1px solid var(--line); background: var(--paper); }
 
@@ -256,7 +260,7 @@ dialog::backdrop { background: rgba(16, 52, 58, .5); }
   .doctor-row .avatar { width: 2.6rem; height: 2.6rem; font-size: .85rem; }
   .doctor-row > :nth-child(3), .doctor-row > :nth-child(4) { grid-column: 2; }
   .ticket { grid-template-columns: 1fr; }
-  .ticket-stub { border-left: 0; border-top: 2px dashed rgba(16, 52, 58, .35); }
+  .ticket-stub { border-left: 0; border-top: 2px dashed rgba(19, 35, 58, .35); }
   .ticket::before, .ticket::after { display: none; }
   .filters { grid-template-columns: 1fr; }
   /* Jadval -> kartochkalar */
@@ -269,7 +273,7 @@ dialog::backdrop { background: rgba(16, 52, 58, .5); }
 }
 
 /* ---------- Footer ---------- */
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
 .footer-grid p { margin: .4rem 0 0; max-width: 36ch; }
 .footer-grid nav { display: grid; gap: .4rem; align-content: start; }
 .footer-grid nav b, .footer-brand { color: var(--ink); font-weight: 600; }
@@ -287,27 +291,27 @@ dialog::backdrop { background: rgba(16, 52, 58, .5); }
 .segmented button[aria-pressed='true'] { background: var(--ink); color: #fff; }
 
 /* ---------- Tablo (navbat ekrani) ---------- */
-.board { background: var(--ink); color: #e6f0ed; border-radius: var(--r-lg); padding: 1.5rem; box-shadow: 0 24px 48px -32px rgba(16, 52, 58, .6); }
+.board { background: var(--ink); color: #e6f0ed; border-radius: var(--r-lg); padding: 1.5rem; box-shadow: 0 24px 48px -32px rgba(19, 35, 58, .6); }
 .board-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; padding-bottom: 1.25rem; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,.1); }
-.board-caption { font-size: .8rem; color: #9fbab3; }
+.board-caption { font-size: .8rem; color: #93a1b8; }
 .board-title { font-family: var(--font-display); font-size: var(--step-2); font-weight: 600; margin: .2rem 0 0; color: #fff; line-height: 1.15; }
 .board-clock { font-family: var(--font-display); font-size: var(--step-3); font-weight: 600; color: var(--ticket); font-variant-numeric: tabular-nums; }
 .board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
 .board-cell { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: var(--r-md); padding: 1rem; display: grid; gap: 1rem; align-content: start; }
 .board-cell-head { display: grid; grid-template-columns: auto 1fr; gap: .75rem; align-items: center; }
 .board-cell-head b { display: block; color: #fff; font-weight: 600; font-size: .95rem; line-height: 1.3; }
-.board-cell-head span { font-size: .8rem; color: #9fbab3; }
+.board-cell-head span { font-size: .8rem; color: #93a1b8; }
 .board-room { font-family: var(--font-display); font-weight: 600; font-size: .9rem; min-width: 48px; height: 36px; padding: 0 .5rem; display: grid; place-items: center; border: 1.5px solid rgba(255,255,255,.25); border-radius: 8px; color: #fff; font-variant-numeric: tabular-nums; }
 .board-now { display: grid; grid-template-columns: 1fr auto; align-items: end; background: var(--ticket); color: var(--ink); border-radius: 8px; padding: .75rem 1rem; }
-.board-now .board-caption { grid-column: 1 / -1; color: rgba(16,52,58,.7); font-weight: 500; }
+.board-now .board-caption { grid-column: 1 / -1; color: rgba(19,35,58,.7); font-weight: 500; }
 .board-number { font-family: var(--font-display); font-size: 3rem; line-height: 1; font-weight: 700; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .board-time { font-weight: 600; font-variant-numeric: tabular-nums; }
 .board-next { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
 .board-next li { border: 1px solid rgba(255,255,255,.12); border-radius: 6px; padding: .35rem .25rem; text-align: center; display: grid; }
 .board-next b { font-family: var(--font-display); font-weight: 600; color: #fff; font-variant-numeric: tabular-nums; }
-.board-next span { font-size: .72rem; color: #9fbab3; font-variant-numeric: tabular-nums; }
-.board-next .board-empty { grid-column: 1 / -1; color: #9fbab3; font-size: .8rem; border-style: dashed; }
-.board-foot { display: flex; justify-content: space-between; font-size: .78rem; color: #9fbab3; border-top: 1px solid rgba(255,255,255,.08); padding-top: .75rem; }
+.board-next span { font-size: .72rem; color: #93a1b8; font-variant-numeric: tabular-nums; }
+.board-next .board-empty { grid-column: 1 / -1; color: #93a1b8; font-size: .8rem; border-style: dashed; }
+.board-foot { display: flex; justify-content: space-between; font-size: .78rem; color: #93a1b8; border-top: 1px solid rgba(255,255,255,.08); padding-top: .75rem; }
 .board-state { background: var(--card); border-radius: var(--r-md); color: var(--muted); }
 
 /* ---------- Mening chiptam ---------- */
@@ -399,20 +403,21 @@ dialog::backdrop { background: rgba(16, 52, 58, .5); }
 }
 
 /* ---------- Bemor sayti: xodimlar havolasi ---------- */
-.staff-link { flex: 0 0 auto; text-decoration: none; font-size: var(--step--1); font-weight: 500; color: #d5e6e1; border: 1px solid rgba(255,255,255,.2); padding: .4rem .8rem; border-radius: 999px; transition: border-color .15s, color .15s; }
+.staff-link { flex: 0 0 auto; text-decoration: none; font-size: var(--step--1); font-weight: 500; color: #c9d3e2; border: 1px solid rgba(255,255,255,.2); padding: .4rem .8rem; border-radius: 999px; transition: border-color .15s, color .15s; }
 .staff-link:hover { color: #fff; border-color: rgba(255,255,255,.5); }
 
 /* ---------- Registratura paneli (alohida qobiq) ---------- */
 .admin-shell { flex: 1; display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
-.admin-side { background: var(--ink); color: #d5e6e1; padding: 20px 16px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; }
+.admin-side { background: var(--ink); color: #c9d3e2; padding: 20px 16px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; }
 .admin-side .brand { color: #fff; padding: 4px 8px; }
-.admin-role { font-size: .78rem; color: #9fbab3; padding: 4px 8px 0 52px; margin-bottom: 24px; }
+.admin-role { font-size: .78rem; color: #93a1b8; padding: 4px 8px 0 52px; margin-bottom: 24px; }
 .admin-nav { display: grid; gap: 4px; }
-.admin-nav a, .admin-exit { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border-radius: 8px; text-decoration: none; font-size: var(--step--1); font-weight: 500; color: #d5e6e1; transition: background .15s, color .15s; }
-.admin-nav a:hover, .admin-exit:hover { background: rgba(255,255,255,.06); color: #fff; }
+.admin-nav a, .admin-exit a { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border-radius: 8px; text-decoration: none; font-size: var(--step--1); font-weight: 500; color: #c9d3e2; transition: background .15s, color .15s; }
+.admin-nav a:hover, .admin-exit a:hover { background: rgba(255,255,255,.06); color: #fff; }
 .admin-nav a[aria-current='page'] { background: rgba(255,255,255,.1); color: #fff; box-shadow: inset 2px 0 0 var(--ticket); }
 .admin-nav svg, .admin-exit svg { flex: 0 0 18px; opacity: .85; }
-.admin-exit { margin-top: auto; color: #9fbab3; border-top: 1px solid rgba(255,255,255,.08); border-radius: 0; padding-top: 12px; height: auto; }
+.admin-exit { margin-top: auto; display: grid; gap: 4px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 12px; }
+.admin-exit a { color: #93a1b8; }
 .admin-main { padding: 32px clamp(16px, 3vw, 40px) 64px; max-width: 1400px; width: 100%; }
 .admin-main > .page-head h1, .admin-main h1 { font-size: var(--step-4); }
 
@@ -423,10 +428,94 @@ dialog::backdrop { background: rgba(16, 52, 58, .5); }
   .admin-nav { display: flex; order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; }
   .admin-nav a { white-space: nowrap; flex: 0 0 auto; }
   .admin-nav a[aria-current='page'] { box-shadow: inset 0 -2px 0 var(--ticket); }
-  .admin-exit { margin: 0 0 0 auto; border: 0; padding: 0 10px; height: 36px; }
+  .admin-exit { margin: 0 0 0 auto; border: 0; padding: 0; display: flex; }
   .admin-main { padding: 24px 12px 48px; }
 }
 @media (max-width: 640px) {
   .site-header .wrap { position: relative; }
   .staff-link { position: absolute; right: 0; top: .6rem; }
 }
+
+
+/* ================================================================
+   Interaktiv qatlam — 60/30/10: qog'oz fon, tungi ko'k, signal to'q sariq
+   ================================================================ */
+:root { --ease: cubic-bezier(.2, .8, .2, 1); }
+::selection { background: var(--ticket); color: var(--ink); }
+:focus-visible { outline: 3px solid var(--ticket); outline-offset: 2px; }
+h1, h2, h3 { letter-spacing: -.025em; font-weight: 700; }
+h1::after { content: '.'; color: var(--ticket); }
+.site-header { box-shadow: inset 0 -3px 0 var(--ticket); }
+.brand-mark { background: var(--ticket); }
+
+/* Tugmalar: ko'tariladi, bosilganda siqiladi */
+.btn { transition: transform .18s var(--ease), box-shadow .18s var(--ease), background .18s, border-color .18s, color .18s; }
+.btn:hover:not([disabled]) { transform: translateY(-2px); box-shadow: 0 8px 18px -10px rgba(19, 35, 58, .55); }
+.btn:active:not([disabled]) { transform: translateY(0) scale(.97); box-shadow: none; }
+.btn-ticket { background: var(--ticket); color: var(--ink); }
+.btn-ticket:hover { background: #ff7440; }
+.btn-primary:hover { background: var(--ink-soft); }
+.btn-ghost:hover { border-color: var(--ticket); color: var(--ink); }
+
+/* Menyu */
+.nav a { transition: background .18s, color .18s; }
+.nav a[aria-current='page'] { background: var(--ticket); color: var(--ink); }
+
+/* Ro'yxat qatorlari: chap tomonda signal chiziq chiqadi */
+.doctor-row, .spec-row { position: relative; transition: background .2s, transform .25s var(--ease); }
+.doctor-row::before, .spec-row::before { content: ''; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px; border-radius: 2px; background: var(--ticket); transform: scaleY(0); transition: transform .25s var(--ease); }
+.doctor-row:hover, .spec-row:hover { background: var(--card); transform: translateX(4px); }
+.doctor-row:hover::before, .spec-row:hover::before { transform: scaleY(1); }
+.doctor-row .avatar { transition: background .2s, color .2s, transform .25s var(--ease); }
+.doctor-row:hover .avatar { background: var(--ink); color: #fff; transform: rotate(-6deg); }
+
+/* Chipta: hover'da biroz ko'tariladi va qiyshayadi */
+.ticket { transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+.ticket:hover { transform: translateY(-3px) rotate(-.6deg); box-shadow: 0 1px 0 var(--line), 0 28px 50px -26px rgba(19, 35, 58, .55); }
+.ticket-stub { background: var(--ticket); }
+
+/* Vaqt to'ri */
+.slot { transition: transform .18s var(--ease), border-color .18s, background .18s, box-shadow .18s; }
+.slot:hover:not([disabled]) { transform: translateY(-2px); border-color: var(--ink); box-shadow: 0 6px 14px -10px rgba(19, 35, 58, .6); }
+.slot[aria-pressed='true'] { background: var(--ticket); border-color: var(--ticket-deep); animation: pop .3s var(--ease); }
+.day { transition: transform .18s var(--ease), border-color .18s, background .18s; }
+.day:hover { transform: translateY(-2px); border-color: var(--ink); }
+@keyframes pop { 50% { transform: scale(1.06); } }
+
+/* Kartochkalar */
+.step, .board-cell, .role { transition: transform .25s var(--ease), box-shadow .25s var(--ease); }
+.step:hover { transform: translateY(-4px); box-shadow: 0 18px 36px -24px rgba(19, 35, 58, .5); }
+.step:hover .step-no { transform: rotate(-4deg) scale(1.04); }
+.step-no { transition: transform .25s var(--ease); background: var(--ticket); }
+.board-cell:hover { transform: translateY(-3px); }
+.figure { transition: background .2s; }
+.figure:hover { background: var(--card); }
+.figure:hover b { color: var(--ticket-deep); }
+.figure b { transition: color .2s; }
+
+/* Grafiklar ochilganda o'sadi */
+.week-track i { transform-origin: bottom; animation: grow-y .7s var(--ease) both; }
+.week-bar:nth-child(2) i { animation-delay: .05s; } .week-bar:nth-child(3) i { animation-delay: .1s; }
+.week-bar:nth-child(4) i { animation-delay: .15s; } .week-bar:nth-child(5) i { animation-delay: .2s; }
+.week-bar:nth-child(6) i { animation-delay: .25s; } .week-bar:nth-child(7) i { animation-delay: .3s; }
+.week-bar.is-peak .week-track i { background: var(--ticket); }
+.week-bar:hover .week-track i { background: var(--ink); }
+.week-bar:hover .week-value { color: var(--ink); }
+.rank-track i { transform-origin: left; animation: grow-x .7s var(--ease) both; }
+.rank li.is-top .rank-track i { background: var(--ticket); }
+.stack-bar i { transform-origin: left; animation: grow-x .6s var(--ease) both; }
+@keyframes grow-y { from { transform: scaleY(0); } }
+@keyframes grow-x { from { transform: scaleX(0); } }
+
+/* Tablo: raqam "varaqlanadi" */
+.board-now { background: var(--ticket); }
+.board-number { animation: flip .6s var(--ease) both; transform-origin: 50% 60%; }
+@keyframes flip { from { opacity: 0; transform: rotateX(-80deg) translateY(-6px); } }
+
+/* Kirish sahifasi */
+.login { flex: 1; display: grid; place-items: center; padding: 24px 16px; background: var(--ink); background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,.06) 1px, transparent 0); background-size: 24px 24px; }
+.login-card { width: min(400px, 100%); background: var(--card); border-radius: var(--r-lg); padding: 32px; display: grid; gap: 20px; box-shadow: inset 0 4px 0 var(--ticket), 0 30px 60px -30px rgba(0,0,0,.6); }
+.login-card h1 { font-size: var(--step-3); }
+.login-card p { margin: .25rem 0 0; }
+.login-brand { color: var(--ink); }
+.login-back { font-size: var(--step--1); color: var(--muted); justify-self: center; }

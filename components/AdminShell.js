@@ -37,10 +37,10 @@ export default function AdminShell({ children }) {
             </Link>
           ))}
         </nav>
-        <Link className="admin-exit" href="/">
-          <Icon d="M15 18l-6-6 6-6" />
-          Bemor sayti
-        </Link>
+        <div className="admin-exit">
+          <Link href="/"><Icon d="M15 18l-6-6 6-6" />Bemor sayti</Link>
+          <a href="/auth/logout"><Icon d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />Chiqish</a>
+        </div>
       </aside>
       <main className="admin-main">{children}</main>
     </div>

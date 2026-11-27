@@ -22,11 +22,6 @@ export default function FrontendLayout({ children }) {
             <Link href="/chipta">Mening chiptam</Link>
             <Link href="/qanday-ishlaydi">Qanday ishlaydi</Link>
           </nav>
-          <nav aria-label="Xodimlar uchun">
-            <b>Xodimlar uchun</b>
-            <Link href="/admin">Registratura paneli</Link>
-            <Link href="/admin/tablo">Navbat tablosi</Link>
-          </nav>
         </div>
       </footer>
     </>

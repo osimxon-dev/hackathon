@@ -86,6 +86,7 @@ DATABASE_URL=postgresql://localhost/navbat_test SEED_DEMO_DATA=false npm test
 | `DATABASE_URL` | PostgreSQL ulanish satri (Vercel + Neon integratsiyasida avtomatik qo'yiladi). `POSTGRES_URL` ham qabul qilinadi |
 | `SEED_DEMO_DATA` | `false` bo'lsa demo ma'lumot qo'shilmaydi |
 | `DB_POOL_MAX` | Ulanishlar havzasi hajmi (standart 3) |
+| `ADMIN_PASSWORD` | Registratura paneli (`/admin`) paroli. O'rnatilmasa panelga kirib bo'lmaydi |
 
 Maxfiy ma'lumotlar kodda yozilmaydi: `.env` git'ga kirmaydi, namunasi `.env.example` faylida.
 
