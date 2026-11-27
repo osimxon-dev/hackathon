@@ -7,7 +7,7 @@ const { Pool, types } = pg;
 // DATE ustunlarini JS Date'ga aylantirmaymiz — vaqt zonasi siljishining oldini oladi
 types.setTypeParser(1082, (value) => value);
 
-const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.STORAGE_URL || process.env.STORAGE_DATABASE_URL;
 
 let pool;
 function getPool() {
