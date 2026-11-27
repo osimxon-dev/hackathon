@@ -1,8 +1,7 @@
-import Link from 'next/link';
-import SiteHeader from '@/components/SiteHeader';
 import { ToastProvider } from '@/components/Toast';
 import './globals.css';
 
+// Root layout: faqat umumiy qobiq. Bemor sayti — app/(frontend), registratura paneli — app/(admin).
 export const metadata = {
   title: {
     default: 'Navbat — shifokor qabuliga onlayn yozilish',
@@ -29,34 +28,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <ToastProvider>
-          <SiteHeader />
-          <main>
-            <div className="wrap">{children}</div>
-          </main>
-          <footer className="site-footer">
-            <div className="wrap footer-grid">
-              <div>
-                <b className="footer-brand">Navbat</b>
-                <p>Poliklinika uchun onlayn navbat tizimi. Vaqtlar Toshkent vaqti bo&apos;yicha</p>
-              </div>
-              <nav aria-label="Bemorlar uchun">
-                <b>Bemorlar uchun</b>
-                <Link href="/">Shifokorlar</Link>
-                <Link href="/yonalishlar">Yo&apos;nalishlar</Link>
-                <Link href="/chipta">Mening chiptam</Link>
-                <Link href="/qanday-ishlaydi">Qanday ishlaydi</Link>
-              </nav>
-              <nav aria-label="Registratura uchun">
-                <b>Registratura</b>
-                <Link href="/tablo">Navbat tablosi</Link>
-                <Link href="/appointments">Qabullar</Link>
-                <Link href="/statistika">Statistika</Link>
-                <Link href="/admin">Boshqaruv</Link>
-              </nav>
-            </div>
-          </footer>
-        </ToastProvider>
+        <ToastProvider>{children}</ToastProvider>
       </body>
     </html>
   );

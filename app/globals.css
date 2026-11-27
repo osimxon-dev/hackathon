@@ -202,7 +202,7 @@ textarea.input { min-height: 88px; resize: vertical; }
 .table tr:last-child td { border-bottom: 0; }
 .table .actions { display: flex; gap: .35rem; flex-wrap: wrap; justify-content: flex-end; }
 .when b { display: block; }
-.ticket-mini { font-family: var(--font-display); font-weight: 600; background: var(--ticket); padding: .1rem .45rem; border-radius: 4px; font-size: .8rem; }
+.ticket-mini { white-space: nowrap; font-family: var(--font-display); font-weight: 600; background: var(--ticket); padding: .1rem .45rem; border-radius: 4px; font-size: .8rem; }
 .pager { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; gap: 1rem; flex-wrap: wrap; }
 
 /* ---------- States ---------- */
@@ -396,4 +396,37 @@ dialog::backdrop { background: rgba(16, 52, 58, .5); }
   .week-chart { gap: .4rem; height: 200px; }
   .history li { grid-template-columns: auto minmax(0, 1fr); }
   .history li .pill { grid-column: 2; justify-self: start; }
+}
+
+/* ---------- Bemor sayti: xodimlar havolasi ---------- */
+.staff-link { flex: 0 0 auto; text-decoration: none; font-size: var(--step--1); font-weight: 500; color: #d5e6e1; border: 1px solid rgba(255,255,255,.2); padding: .4rem .8rem; border-radius: 999px; transition: border-color .15s, color .15s; }
+.staff-link:hover { color: #fff; border-color: rgba(255,255,255,.5); }
+
+/* ---------- Registratura paneli (alohida qobiq) ---------- */
+.admin-shell { flex: 1; display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+.admin-side { background: var(--ink); color: #d5e6e1; padding: 20px 16px; display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; height: 100vh; }
+.admin-side .brand { color: #fff; padding: 4px 8px; }
+.admin-role { font-size: .78rem; color: #9fbab3; padding: 4px 8px 0 52px; margin-bottom: 24px; }
+.admin-nav { display: grid; gap: 4px; }
+.admin-nav a, .admin-exit { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border-radius: 8px; text-decoration: none; font-size: var(--step--1); font-weight: 500; color: #d5e6e1; transition: background .15s, color .15s; }
+.admin-nav a:hover, .admin-exit:hover { background: rgba(255,255,255,.06); color: #fff; }
+.admin-nav a[aria-current='page'] { background: rgba(255,255,255,.1); color: #fff; box-shadow: inset 2px 0 0 var(--ticket); }
+.admin-nav svg, .admin-exit svg { flex: 0 0 18px; opacity: .85; }
+.admin-exit { margin-top: auto; color: #9fbab3; border-top: 1px solid rgba(255,255,255,.08); border-radius: 0; padding-top: 12px; height: auto; }
+.admin-main { padding: 32px clamp(16px, 3vw, 40px) 64px; max-width: 1400px; width: 100%; }
+.admin-main > .page-head h1, .admin-main h1 { font-size: var(--step-4); }
+
+@media (max-width: 900px) {
+  .admin-shell { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .admin-side { position: sticky; top: 0; z-index: 20; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; }
+  .admin-role { display: none; }
+  .admin-nav { display: flex; order: 3; width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .admin-nav a { white-space: nowrap; flex: 0 0 auto; }
+  .admin-nav a[aria-current='page'] { box-shadow: inset 0 -2px 0 var(--ticket); }
+  .admin-exit { margin: 0 0 0 auto; border: 0; padding: 0 10px; height: 36px; }
+  .admin-main { padding: 24px 12px 48px; }
+}
+@media (max-width: 640px) {
+  .site-header .wrap { position: relative; }
+  .staff-link { position: absolute; right: 0; top: .6rem; }
 }

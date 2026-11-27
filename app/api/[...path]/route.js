@@ -1,5 +1,5 @@
 // Next.js route handler: barcha /api/* so'rovlarini backend dispetcheriga uzatadi.
-import { dispatch } from '@/server/app';
+import { dispatch } from '@/backend/app';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

@@ -42,7 +42,7 @@ export default function StatsPage() {
     <>
       <div className="page-head">
         <div>
-          <h1>Statistika</h1>
+          <h1>Umumiy ko&apos;rinish</h1>
           <p>Poliklinika yuklamasi: bugungi qabullar, keyingi 7 kun va qaysi yo&apos;nalishga talab ko&apos;proq</p>
         </div>
       </div>

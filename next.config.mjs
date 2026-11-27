@@ -4,6 +4,14 @@ const nextConfig = {
   // pg — Node.js drayveri, uni bundlega qo'shmasdan tashqi paket sifatida ishlatamiz
   serverExternalPackages: ['pg'],
   poweredByHeader: false,
+  // Eski manzillar registratura paneliga ko'chdi
+  async redirects() {
+    return [
+      { source: '/appointments', destination: '/admin/qabullar', permanent: false },
+      { source: '/tablo', destination: '/admin/tablo', permanent: false },
+      { source: '/statistika', destination: '/admin', permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;

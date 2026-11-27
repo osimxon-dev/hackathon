@@ -206,7 +206,7 @@ function Confirmation({ appointment: a }) {
       </Ticket>
       <div style={{ display: 'flex', gap: '.6rem', flexWrap: 'wrap', marginTop: '1.5rem' }}>
         <button className="btn btn-primary" type="button" onClick={() => window.print()}>Chiptani chop etish</button>
-        <Link className="btn btn-ghost" href={`/appointments?search=${a.patientPhone.slice(-7)}`}>Mening qabullarim</Link>
+        <Link className="btn btn-ghost" href="/chipta">Mening qabullarim</Link>
         <Link className="btn btn-ghost" href="/">Bosh sahifa</Link>
       </div>
     </div>

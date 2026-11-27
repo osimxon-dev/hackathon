@@ -23,7 +23,7 @@ Davlat poliklinikalarida shifokor qabuliga yozilish uchun bemor ertalab erta kel
 
 ## Biznes qoidalar
 
-Barcha qoidalar [`server/services/booking.js`](server/services/booking.js) faylida joylashgan.
+Barcha qoidalar [`backend/services/booking.js`](backend/services/booking.js) faylida joylashgan.
 
 | # | Qoida | Javob |
 |---|-------|-------|
@@ -50,7 +50,7 @@ doctors (1) ──────< (N) appointments
   is_active, created_at, updated_at      status, created_at, updated_at
 ```
 
-Sxema birinchi so'rovda avtomatik yaratiladi ([`server/schema.js`](server/schema.js)). Bir vaqtda ishga tushgan serverless instansiyalar `pg_advisory_xact_lock` bilan tartiblanadi. Baza bo'sh bo'lsa, 8 ta demo shifokor va bir nechta qabul qo'shiladi (`SEED_DEMO_DATA=false` bilan o'chiriladi).
+Sxema birinchi so'rovda avtomatik yaratiladi ([`backend/schema.js`](backend/schema.js)). Bir vaqtda ishga tushgan serverless instansiyalar `pg_advisory_xact_lock` bilan tartiblanadi. Baza bo'sh bo'lsa, 8 ta demo shifokor va bir nechta qabul qo'shiladi (`SEED_DEMO_DATA=false` bilan o'chiriladi).
 
 ---
 
@@ -170,14 +170,22 @@ Har bir sahifada yuklanish, xato (qayta urinish tugmasi bilan) va bo'sh holatlar
 ## Loyiha tuzilmasi
 
 ```
-app/                  Next.js sahifalari va API kirish nuqtasi
-  api/[...path]/      Barcha /api/* so'rovlarini server/app.js ga uzatadi
-  doctors/[id]/       Yozilish sahifasi
-  appointments/       Registratura sahifasi
-  admin/              Shifokorlarni boshqarish
-components/           Qayta ishlatiladigan UI komponentlari (chipta, holatlar, toast)
+app/
+  (frontend)/         BEMOR SAYTI (o'z header va footeri bilan)
+    page.js           Shifokorlar + eng yaqin bo'sh navbat
+    doctors/[id]/     Vaqt tanlash, yozilish, chipta
+    yonalishlar/      Yo'nalishlar va har biri uchun eng yaqin bo'sh vaqt
+    chipta/           Mening chiptam: telefon orqali qabullarni topish, bekor qilish
+    qanday-ishlaydi/  Qadamlar va 12 ta navbat qoidasi
+  (admin)/admin/      REGISTRATURA PANELI (alohida yon menyu bilan)
+    page.js           Umumiy ko'rinish: 7 kunlik yuklama, yo'nalishlar, bugungi holat
+    qabullar/         Qabullar: filtr, sahifalash, ko'chirish, holat
+    shifokorlar/      Shifokorlar CRUD va jadval
+    tablo/            Yo'lak uchun navbat tablosi (faqat chipta raqamlari)
+  api/[...path]/      Barcha /api/* so'rovlarini backend/app.js ga uzatadi
+components/           UI komponentlari (chipta, holatlar, toast, SiteHeader, AdminShell)
 lib/                  Frontend: API mijozi, sana va telefon formatlash
-server/               Backend (framework'dan mustaqil)
+backend/              Backend (framework'dan mustaqil)
   app.js              Dispetcher: marshrutlash, xatolarni JSON ga aylantirish
   routes/             Shifokorlar, qabullar, statistika endpointlari
   services/booking.js Barcha biznes qoidalar

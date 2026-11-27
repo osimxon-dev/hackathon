@@ -51,7 +51,7 @@ export default function SpecialtiesPage() {
       {error && <ErrorState error={error} onRetry={load} />}
       {!loading && !error && rows.length === 0 && (
         <EmptyState title="Hozircha yo'nalishlar yo'q" text="Boshqaruv sahifasida shifokor qo'shilgach, yo'nalishlar shu yerda chiqadi.">
-          <Link className="btn btn-primary btn-sm" href="/admin">Shifokor qo&apos;shish</Link>
+          <Link className="btn btn-primary btn-sm" href="/admin/shifokorlar">Shifokor qo&apos;shish</Link>
         </EmptyState>
       )}
       {!loading && !error && rows.length > 0 && (

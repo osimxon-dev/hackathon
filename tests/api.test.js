@@ -3,8 +3,8 @@
 // Diqqat: testlar alohida (bo'sh) bazada ishga tushirilishi kerak.
 import assert from 'node:assert/strict';
 import { before, describe, test } from 'node:test';
-import { dispatch } from '../server/app.js';
-import { addDays, clinicNow, isoWeekday } from '../server/time.js';
+import { dispatch } from '../backend/app.js';
+import { addDays, clinicNow, isoWeekday } from '../backend/time.js';
 
 process.env.NODE_ENV = 'test';
 
