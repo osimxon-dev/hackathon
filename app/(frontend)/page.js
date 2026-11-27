@@ -4,103 +4,56 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { EmptyState, ErrorState, Loading, SearchIcon, WeekStrip } from '@/components/ui';
 import { api } from '@/lib/api';
-import { initials, nowTime, pad } from '@/lib/format';
+import { initials, todayISO, weekdayIndex } from '@/lib/format';
 
-/* ---------- Hero ko'rgazmasi: 3 qadam o'zi almashadi, bosish ham mumkin (yozilish emas) ---------- */
-const HOW = [
-  { title: 'Shifokorni tanlang', text: "Ro'yxatdan yoki yo'nalish bo'yicha tanlaysiz" },
-  { title: "Bo'sh vaqtni bosing", text: "Band va o'tgan vaqtlar yopiq, faqat bo'shlari bosiladi" },
-  { title: 'Chiptani oling', text: 'Raqam, xona va vaqt telefoningizda qoladi' },
-];
-const DEMO_TIMES = ['09:00', '09:20', '09:40', '10:00', '10:20', '10:40'];
-
-function HowSteps({ specialties }) {
-  const [step, setStep] = useState(0);
-  const [paused, setPaused] = useState(false);
-  useEffect(() => {
-    if (paused) return undefined;
-    const timer = setInterval(() => setStep((n) => (n + 1) % HOW.length), 3500);
-    return () => clearInterval(timer);
-  }, [paused, step]);
-  const names = specialties.length ? specialties.slice(0, 3).map((s) => s.name) : ['Terapevt', 'Kardiolog', 'Pediatr'];
-
-  return (
-    <div className="hs" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} aria-label="Qanday ishlaydi">
-      <div className="hs-tabs" role="tablist">
-        {HOW.map((h, i) => (
-          <button key={h.title} type="button" role="tab" aria-selected={i === step} className="hs-tab" onClick={() => setStep(i)}>
-            <span className="qb-n">{i + 1}</span>
-            <b>{h.title}</b>
-            {i === step && <i className={`hs-progress ${paused ? 'is-paused' : ''}`} />}
-          </button>
-        ))}
-      </div>
-      <div className="hs-stage" key={step} aria-hidden="true">
-        {step === 0 && (
-          <ul className="hs-list">
-            {names.map((n, i) => (
-              <li key={n} className={i === 0 ? 'is-on' : ''} style={{ '--i': i }}>
-                <span className="avatar">{n.slice(0, 2).toUpperCase()}</span>
-                <span><b>{n}</b><small>Mutaxassis</small></span>
-                <span className="hs-go">→</span>
-              </li>
-            ))}
-          </ul>
-        )}
-        {step === 1 && (
-          <div className="qb-times">
-            {DEMO_TIMES.map((t, i) => {
-              const off = i === 1 || i === 4;
-              return (
-                <span key={t} className={`qb-time ${i === 2 ? 'is-first' : ''} ${off ? 'is-off' : ''}`} style={{ '--i': i }}>
-                  <b>{t}</b><span>{i === 2 ? 'tanlandi' : off ? 'band' : `№ ${pad(i + 1)}`}</span>
-                </span>
-              );
-            })}
-          </div>
-        )}
-        {step === 2 && (
-          <div className="hs-ticket">
-            <div><small>Navbat chiptasi</small><b>{names[0]}</b><span>Bugun, 09:40</span></div>
-            <div className="hs-stub"><b><small>№</small>03</b><span>xona raqami</span></div>
-          </div>
-        )}
-      </div>
-      <p className="hs-caption">{HOW[step].text}</p>
-    </div>
-  );
-}
-
-/* ---------- Hero: kursor ortidan yuradigan yorug'lik ---------- */
+/* ---------- Hero: poliklinika ko'rsatkich taxtasi (haqiqiy shifokorlar, xona raqamlari) ---------- */
 function Hero({ specialties }) {
-  const [clock, setClock] = useState('');
+  const [doctors, setDoctors] = useState(null);
+  const weekday = weekdayIndex(todayISO());
+
   useEffect(() => {
-    const tick = () => setClock(nowTime());
-    tick();
-    const timer = setInterval(tick, 10000);
-    return () => clearInterval(timer);
+    api.doctors({ active: 'true' })
+      .then(({ data }) => setDoctors([...data].sort((x, y) => x.room.localeCompare(y.room, undefined, { numeric: true }))))
+      .catch(() => setDoctors([]));
   }, []);
-  const doctors = specialties.reduce((sum, s) => sum + s.doctors, 0);
-  const track = (e) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
-    e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
-  };
+
+  const working = doctors ? doctors.filter((d) => d.workDays.includes(weekday)).length : null;
 
   return (
-    <section className="hero-x" onMouseMove={track}>
-      <div className="hero-x-inner">
-        <div className="hero-copy">
-          <p className="hero-live"><i aria-hidden="true" />Toshkent vaqti {clock}{doctors > 0 && ` · ${doctors} shifokor jadvalda`}</p>
-          <h1>Shifokorga navbatni <span className="hl">uydan</span> oling</h1>
-          <p className="hero-lead">Poliklinika yo&apos;lagida soatlab kutish shart emas. Shifokorni tanlang, uning jadvalidan bo&apos;sh vaqtni band qiling, chiptangiz telefoningizda bo&apos;ladi</p>
-          <div className="hero-actions">
-            <a className="btn btn-ticket" href="#doctors-title">Shifokor tanlash</a>
-            <Link className="btn hero-ghost" href="/chipta">Mening chiptam</Link>
-          </div>
+    <section className="hero2">
+      <div className="hero2-copy">
+        <p className="hero2-kicker">Poliklinika · onlayn navbat</p>
+        <h1>Navbatni uydan oling, qabulga vaqtida keling</h1>
+        <p className="hero2-lead">Yo&apos;lakda soatlab kutish shart emas. Shifokorni tanlang, jadvalidan bo&apos;sh vaqtni band qiling, chipta telefoningizda qoladi</p>
+        <div className="hero2-actions">
+          <a className="btn btn-ticket" href="#doctors-title">Shifokor tanlash <span aria-hidden="true">→</span></a>
+          <Link className="btn btn-ghost" href="/chipta">Mening chiptam</Link>
         </div>
-        <HowSteps specialties={specialties} />
+        <dl className="hero2-facts">
+          <div><dt>Shifokorlar</dt><dd>{doctors ? doctors.length : '—'}</dd></div>
+          <div><dt>Yo&apos;nalishlar</dt><dd>{specialties.length || '—'}</dd></div>
+          <div><dt>Bugun ishlaydi</dt><dd>{working ?? '—'}</dd></div>
+        </dl>
       </div>
+
+      <nav className="directory" aria-label="Poliklinika ko'rsatkichi">
+        <div className="directory-head">
+          <span>Xona</span><span>Yo&apos;nalish va shifokor</span><span>Bugun</span>
+        </div>
+        {!doctors && Array.from({ length: 6 }, (_, i) => <span key={i} className="dir-row skeleton-row" />)}
+        {doctors && doctors.map((d, i) => {
+          const works = d.workDays.includes(weekday);
+          return (
+            <Link key={d.id} className="dir-row" href={`/doctors/${d.id}`} style={{ '--i': i }}>
+              <span className="dir-room">{d.room}</span>
+              <span className="dir-name"><b>{d.specialty}</b><small>{d.fullName}</small></span>
+              <span className={`dir-time ${works ? '' : 'is-off'}`}>{works ? `${d.workStart}–${d.workEnd}` : 'Dam olish'}</span>
+              <span className="dir-arrow" aria-hidden="true">→</span>
+            </Link>
+          );
+        })}
+        {doctors && doctors.length === 0 && <p className="dir-empty">Hozircha faol shifokorlar yo&apos;q</p>}
+      </nav>
     </section>
   );
 }
