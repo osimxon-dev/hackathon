@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 export const metadata = { title: 'Registraturaga kirish' };
 
@@ -14,7 +15,7 @@ export default async function LoginPage({ searchParams }) {
   return (
     <main className="login">
       <form className="login-card" method="post" action="/auth/login">
-        <span className="brand login-brand"><span className="brand-mark" aria-hidden="true">N</span>Navbat</span>
+        <span className="brand login-brand"><Logo size={44} />Navbat</span>
         <div>
           <h1>Registratura paneli</h1>
           <p className="muted">Faqat poliklinika xodimlari uchun</p>

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 import { usePathname } from 'next/navigation';
 
 const LINKS = [
@@ -17,7 +18,7 @@ export default function SiteHeader() {
     <header className="site-header">
       <div className="wrap">
         <Link className="brand" href="/">
-          <span className="brand-mark" aria-hidden="true">N</span>
+          <Logo size={40} />
           Navbat
         </Link>
         <nav className="nav" aria-label="Asosiy menyu">

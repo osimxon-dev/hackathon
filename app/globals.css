@@ -919,3 +919,31 @@ h1::after { content: none; }
 
 .dir-error { display: grid; gap: 10px; justify-items: start; padding: 24px 14px; color: #c7c8cb; }
 .dir-error b { color: #fff; font-size: 1.1rem; }
+
+/* Logotip */
+.logo-mark { display: block; flex: 0 0 auto; }
+.brand { gap: .65rem; }
+
+/* Katta footer */
+.site-footer { padding: 0; }
+.footer-top { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.6fr); gap: 4rem; padding-block: 4.5rem 3.5rem; }
+.footer-pitch { display: grid; gap: 1.5rem; justify-items: start; align-content: start; }
+.footer-logo { display: inline-flex; align-items: center; gap: .9rem; }
+.footer-logo b { font-family: var(--font-display); font-weight: 800; font-stretch: 78%; font-size: 3.2rem; line-height: 1; color: var(--paper); letter-spacing: -.01em; }
+.footer-pitch p { margin: 0; font-size: 1.05rem; line-height: 1.6; max-width: 38ch; color: #a9abb0; }
+.footer-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
+.footer-cols nav, .footer-info { display: grid; gap: .7rem; align-content: start; font-size: 1rem; }
+.footer-cols b { color: var(--paper); font-weight: 700; margin-bottom: .3rem; font-size: .85rem; font-family: var(--font-mono); letter-spacing: 0; }
+.footer-info span { color: #a9abb0; line-height: 1.4; }
+.footer-bottom { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-block: 1.5rem 2rem; border-top: 1px solid #34363b; font-size: .85rem; }
+.footer-stack { font-family: var(--font-mono); color: #74777d; }
+@media (max-width: 900px) {
+  .footer-top { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; padding-block: 3rem 2rem; }
+}
+@media (max-width: 640px) {
+  .footer-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer-info { grid-column: 1 / -1; }
+  .footer-logo b { font-size: 2.4rem; }
+}
+.footer-cols a { text-decoration: none; color: #c7c8cb; transition: color .15s; }
+.footer-cols a:hover { color: var(--ticket); }

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 import { usePathname } from 'next/navigation';
 
 const LINKS = [
@@ -25,7 +26,7 @@ export default function AdminShell({ children }) {
     <div className="admin-shell">
       <aside className="admin-side">
         <Link className="brand" href="/admin">
-          <span className="brand-mark" aria-hidden="true">N</span>
+          <Logo size={36} />
           Navbat
         </Link>
         <span className="admin-role">Registratura paneli</span>
