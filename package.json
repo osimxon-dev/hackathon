@@ -1,0 +1,19 @@
+{
+  "name": "navbat",
+  "version": "1.0.0",
+  "description": "Navbat — poliklinikada shifokor qabuliga onlayn yozilish tizimi (HealthTech)",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test tests/"
+  },
+  "dependencies": {
+    "pg": "^8.13.1",
+    "zod": "^3.25.76"
+  }
+}
